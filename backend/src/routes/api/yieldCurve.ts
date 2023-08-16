@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import axios from 'axios';
 
 export const yieldCurveRoute = express.Router();
 
