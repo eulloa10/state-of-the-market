@@ -1,0 +1,19 @@
+{
+  "name": "state-of-the-market",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eulloa10/state-of-the-market.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eulloa10/state-of-the-market/issues"
+  },
+  "homepage": "https://github.com/eulloa10/state-of-the-market#readme"
+}
