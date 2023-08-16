@@ -1,6 +1,6 @@
-import { Router, Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 
-export const caseShillerRoute = Router();
+export const caseShillerRoute = express.Router();
 
 caseShillerRoute.get('/', (req: Request, res: Response): void => {
   res.status(200).json({

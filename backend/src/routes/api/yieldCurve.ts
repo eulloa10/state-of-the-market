@@ -1,9 +1,9 @@
-import { Router, Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 
-export const yieldCurveRoute = Router();
+export const yieldCurveRoute = express.Router();
 
 yieldCurveRoute.get('/', (req: Request, res: Response): void => {
   res.status(200).json({
-    "test": "test response"
+    "Yield Curve": "test response"
   })
 });
