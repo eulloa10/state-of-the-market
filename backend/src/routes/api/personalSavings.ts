@@ -1,4 +1,8 @@
 import express, { Request, Response } from 'express';
+import axios from 'axios';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 export const personalSavingsRoute = express.Router();
 
