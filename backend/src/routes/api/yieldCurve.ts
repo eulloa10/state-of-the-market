@@ -1,10 +1,19 @@
 import express, { Request, Response } from 'express';
 import axios from 'axios';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 export const yieldCurveRoute = express.Router();
 
-yieldCurveRoute.get('/', (req: Request, res: Response): void => {
-  res.status(200).json({
-    "Yield Curve": "test response"
-  })
+yieldCurveRoute.get('/', async (req: Request, res: Response) => {
+  console.log("REQ", req)
+  try {
+    const ycData = await axios.get(`https://api.stlouisfed.org/fred/series/observations?series_id=DGS10&file_type=json&api_key=${process.env.FRED_API_KEY}`)
+    res.json({
+      "Yield Curve": ycData.data.observations
+    });
+  } catch (e) {
+    console.error(e);
+  }
 });

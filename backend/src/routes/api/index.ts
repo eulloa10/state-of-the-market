@@ -8,8 +8,10 @@ import { joltsRoute } from './jolts';
 import { personalConsumptionRoute } from './personalConsumption';
 import { personalSavingsRoute } from './personalSavings';
 import { UnemploymentRateRoute } from './unemploymentRate';
+import morgan from 'morgan';
 
 export const apiRoutes = express.Router();
+apiRoutes.use(morgan('dev'));
 
 apiRoutes.use('/yield-curve', yieldCurveRoute);
 apiRoutes.use('/fed-funds-rate', fedFundsRoute);
