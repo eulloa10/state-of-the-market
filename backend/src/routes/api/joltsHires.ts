@@ -7,8 +7,12 @@ dotenv.config();
 export const joltsHiresRoute = express.Router();
 
 joltsHiresRoute.get('/', async (req: Request, res: Response) => {
-  const joltsHiresData = await axios.get(`https://api.stlouisfed.org/fred/series/observations?series_id=JTSHIR&file_type=json&api_key=${process.env.FRED_API_KEY}`)
-  res.json({
-    "JOLTS Hires": joltsHiresData.data.observations
-  });
+  try {
+    const joltsHireData = await axios.get(`https://api.stlouisfed.org/fred/series/observations?series_id=JTSHIR&file_type=json&api_key=${process.env.FRED_API_KEY}`)
+    res.json({
+      "JOLTS Hires": joltsHireData.data.observations
+    });
+  } catch (e) {
+    console.error(e);
+  }
 });
