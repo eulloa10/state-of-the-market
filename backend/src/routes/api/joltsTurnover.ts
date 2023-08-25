@@ -7,8 +7,8 @@ dotenv.config();
 export const joltsTurnoverRoute = express.Router();
 
 joltsTurnoverRoute.get('/', async (req: Request, res: Response) => {
-  const joltsTurnoverData = await axios.get(`https://api.stlouisfed.org/fred/series/observations?series_id=JTSJOL&file_type=json&api_key=${process.env.FRED_API_KEY}`)
+  const joltsTurnoverData = await axios.get(`https://api.stlouisfed.org/fred/series/observations?series_id=JTSTSR&file_type=json&api_key=${process.env.FRED_API_KEY}`)
   res.json({
-    "JOLTS Openings": joltsTurnoverData.data.observations
+    "JOLTS Turnover": joltsTurnoverData.data.observations
   });
 });
