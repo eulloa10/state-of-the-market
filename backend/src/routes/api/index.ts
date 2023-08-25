@@ -21,12 +21,8 @@ apiRoutes.use('/case-shiller', caseShillerRoute);
 apiRoutes.use('/consumer-confidence', consumerConfidenceRoute);
 apiRoutes.use('/jolts-openings', joltsOpeningsRoute);
 apiRoutes.use('/jolts-hires', joltsHiresRoute);
-apiRoutes.use('/jolts-turnovers', joltsTurnoverRoute);
+apiRoutes.use('/jolts-turnover', joltsTurnoverRoute);
 apiRoutes.use('/personal-consumption', personalConsumptionRoute);
 apiRoutes.use('/personal-savings', personalSavingsRoute);
 apiRoutes.use('/unemployment-rate', UnemploymentRateRoute);
 apiRoutes.use('/cpi', consumerPriceIndexRoute);
-
-// routes.get('/api', (req: Request, res: Response): void => {
-//   res.send("What's up doc?!")
-// });
