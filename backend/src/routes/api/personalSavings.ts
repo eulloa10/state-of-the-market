@@ -6,8 +6,9 @@ dotenv.config();
 
 export const personalSavingsRoute = express.Router();
 
-personalSavingsRoute.get('/', (req: Request, res: Response): void => {
-  res.status(200).json({
-    "Personal Savings": "test response"
-  })
+personalSavingsRoute.get('/', async (req: Request, res: Response) => {
+  const personalSavingsData = await axios.get(`https://api.stlouisfed.org/fred/series/observations?series_id=JTSTSR&file_type=json&api_key=${process.env.FRED_API_KEY}`)
+  res.json({
+    "Personal Consumption": personalSavingsData.data.observations
+  });
 });
