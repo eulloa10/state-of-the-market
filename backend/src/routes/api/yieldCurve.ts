@@ -9,9 +9,9 @@ export const yieldCurveRoute = express.Router();
 yieldCurveRoute.get('/', async (req: Request, res: Response) => {
   console.log("REQ", req)
   try {
-    const ycData = await axios.get(`https://api.stlouisfed.org/fred/series/observations?series_id=DGS10&file_type=json&api_key=${process.env.FRED_API_KEY}`)
+    const yieldCurveDate = await axios.get(`https://api.stlouisfed.org/fred/series/observations?series_id=DGS10&file_type=json&api_key=${process.env.FRED_API_KEY}`)
     res.json({
-      "Yield Curve": ycData.data.observations
+      "Yield Curve": yieldCurveDate.data.observations
     });
   } catch (e) {
     console.error(e);
