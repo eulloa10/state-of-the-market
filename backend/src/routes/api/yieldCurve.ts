@@ -1,16 +1,27 @@
 import express, { Request, Response } from 'express';
 import axios from 'axios';
 import * as dotenv from 'dotenv';
+import * as indicatorReference from '../../data/indicator_reference.json';
+
 
 dotenv.config();
 
 export const yieldCurveRoute = express.Router();
 
+interface Indicators {
+  [key: string]: string
+}
+
+const indicators: Indicators = indicatorReference;
+
 yieldCurveRoute.get('/', async (req: Request, res: Response) => {
+  const baseURL = req.baseUrl.split('/');
+  const indicatorName = baseURL[baseURL.length - 1]
+
   try {
     const yieldCurveData = await axios.get('https://api.stlouisfed.org/fred/series/observations', {
       params: {
-        series_id: 'DGS10',
+        series_id: indicators[indicatorName],
         file_type: 'json',
         api_key: process.env.FRED_API_KEY
       }
