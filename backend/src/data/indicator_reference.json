@@ -1,0 +1,13 @@
+{
+  "yield-curve": "DGS10",
+  "fed-funds-rate": "EFFR",
+  "case-shiller": "CSUSHPINSA",
+  "unemployment-rate": "UNRATE",
+  "cpi": "CPIAUCSL",
+  "personal-consumption": "PCE",
+  "jolts-openings": "JTSJOL",
+  "jolts-hires": "JTSHIR",
+  "jolts-turnover": "JTSTSR",
+  "personal-savings": "PSAVERT",
+  "consumer-confidence": "CSCICP03USM665S"
+}
