@@ -25,7 +25,6 @@ export async function getMostRecentIndicatorDate(indicatorName: string, period: 
 
     let year, month;
 
-    let index = 0;
     [year, month] = indicatorData.data.observations[0].date.split('-');
     if (period != 'current') {
       [year, month] = getPreviousMonthAndYear(year, month);
