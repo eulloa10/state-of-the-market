@@ -34,6 +34,7 @@ indicatorRoute.get('/', async (req: Request, res: Response) => {
   }
 });
 
+// TODO: This route will also have to calculate aggregate values for daily indicators
 indicatorRoute.get('/recent', async (req: Request, res: Response) => {
   const baseURL = req.baseUrl.split('/');
   const indicatorName = baseURL[baseURL.length - 1]
@@ -55,6 +56,7 @@ indicatorRoute.get('/recent', async (req: Request, res: Response) => {
   }
 });
 
+// TODO: This route will also have to calculate aggregate values for daily indicators
 indicatorRoute.get('/prior', async (req: Request, res: Response) => {
   const baseURL = req.baseUrl.split('/');
   const indicatorName = baseURL[baseURL.length - 1]
@@ -81,8 +83,6 @@ indicatorRoute.get('/:period', async (req: Request, res: Response) => {
   const baseURL = req.baseUrl.split('/');
   const indicatorName = baseURL[baseURL.length - 1]
   const [ periodYear, periodMonth ] = req.params.period.split('-')
-
-  console.log("YEAR: ", periodYear, "MONTH: ", periodMonth)
   const periodLastDay = getLastDay(periodMonth, periodYear);
 
   try {
@@ -97,7 +97,7 @@ indicatorRoute.get('/:period', async (req: Request, res: Response) => {
       }
     })
 
-    // Some months have "." as the value. These values need to be skipped so they don't throw off the calculation
+    // TODO: Some months have "." as the value. These values need to be skipped so they don't throw off the calculation. The length of the array should also reflect these invalid values. Bottom lines can probable be put in a helper function
     const dailyConsolidation = indicatorData.data.observations.reduce((acc: number, obj: FREDDataPoint) => acc + Number(obj.value), 0)
     let dailyAverage = (dailyConsolidation / indicatorData.data.observations.length).toFixed(2)
 
