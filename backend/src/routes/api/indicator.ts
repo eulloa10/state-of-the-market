@@ -14,8 +14,6 @@ const indicators: Indicators = indicatorReference;
 indicatorRoute.get('/', async (req: Request, res: Response) => {
   const baseURL = req.baseUrl.split('/');
   const indicatorName = baseURL[baseURL.length - 1]
-  const isDailyIndicator = indicators[indicatorName].frequency == 'daily'
-  console.log("ISDAILYINDICATOR", isDailyIndicator)
 
   try {
     const indicatorData = await axios.get('https://api.stlouisfed.org/fred/series/observations', {
@@ -37,6 +35,7 @@ indicatorRoute.get('/', async (req: Request, res: Response) => {
 indicatorRoute.get('/recent', async (req: Request, res: Response) => {
   const baseURL = req.baseUrl.split('/');
   const indicatorName = baseURL[baseURL.length - 1]
+  const isDailyIndicator = indicators[indicatorName].frequency == 'daily'
 
   try {
     const indicatorData = await axios.get('https://api.stlouisfed.org/fred/series/observations', {
@@ -77,16 +76,27 @@ indicatorRoute.get('/prior', async (req: Request, res: Response) => {
   }
 });
 
+function firstAndLastDay (month: string, year: string) {
+
+  return []
+}
+
 
 indicatorRoute.get('/:period', async (req: Request, res: Response) => {
   const baseURL = req.baseUrl.split('/');
   const indicatorName = baseURL[baseURL.length - 1]
+  const periodMonth = req.params.period.split('-')[1]
+  const periodYear = req.params.period.split('-')[0]
+  const today = new Date();
+  const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth()+1, 0);
+  console.log("TODAY: ", today, " LDOM: ", lastDayOfMonth)
+  console.log("PERIOD MONTH AND YEAR", periodMonth, periodYear)
 
   try {
     const indicatorData = await axios.get('https://api.stlouisfed.org/fred/series/observations', {
       params: {
-        observation_end: req.params.period,
-        observation_start: req.params.period,
+        observation_end: `${periodYear}-31-${periodMonth}`,
+        observation_start: `${periodYear}-01-${periodMonth}`,
         series_id: indicators[indicatorName].seriesId,
         file_type: 'json',
         sort_order: 'desc',
