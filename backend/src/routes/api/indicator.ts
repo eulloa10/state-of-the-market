@@ -41,7 +41,7 @@ indicatorRoute.get('/', async (req: Request, res: Response) => {
 indicatorRoute.get('/recent', async (req: Request, res: Response) => {
   const baseURL = req.baseUrl.split('/');
   const indicatorName = baseURL[baseURL.length - 1];
-  const [ periodYear, periodMonth ] = await getMostRecentIndicatorDate(indicatorName);
+  const [ periodYear, periodMonth ] = await getMostRecentIndicatorDate(indicatorName, "recent");
   const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);
 
   try {
@@ -86,10 +86,15 @@ indicatorRoute.get('/recent', async (req: Request, res: Response) => {
 indicatorRoute.get('/prior', async (req: Request, res: Response) => {
   const baseURL = req.baseUrl.split('/');
   const indicatorName = baseURL[baseURL.length - 1]
+  const [ periodYear, periodMonth ] = await getMostRecentIndicatorDate(indicatorName, "prior");
+  console.log("YEAR", periodYear, "MONTH", periodMonth)
+  const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);
 
   try {
     const indicatorData = await axios.get('https://api.stlouisfed.org/fred/series/observations', {
       params: {
+        observation_end: `${periodYear}-${periodMonth}-${periodLastDay}`,
+        observation_start: `${periodYear}-${periodMonth}-01`,
         series_id: indicators[indicatorName].seriesId,
         file_type: 'json',
         sort_order: 'desc',
@@ -97,8 +102,26 @@ indicatorRoute.get('/prior', async (req: Request, res: Response) => {
       }
     })
 
+    let invalidValues = 0;
+
+    const dailyConsolidation = indicatorData.data.observations.reduce((acc: number, obj: FREDDataPoint) => {
+      if (String(obj.value) === ".") {
+        invalidValues++;
+        return acc;
+      }
+      return acc + Number(obj.value)
+    }, 0)
+    let dailyAverage = (dailyConsolidation / indicatorData.data.observations.length).toFixed(2)
+
+    if (dailyConsolidation === 0) {
+      dailyAverage = "Value not reported"
+    }
+
     res.json({
-      [indicatorName]: indicatorData.data.observations[1]
+      [indicatorName]: {
+        "date": `${periodYear}-${periodMonth}-01`,
+        "value": dailyAverage
+      }
     });
   } catch (e) {
     console.error(e);
