@@ -3,6 +3,7 @@ import * as indicatorReference from '../data/indicatorReference.json';
 import {
   Indicators
 } from '../routes/types/interfaces';
+
 const indicators: Indicators = indicatorReference;
 
 
@@ -22,12 +23,33 @@ export async function getMostRecentIndicatorDate(indicatorName: string, period: 
       }
     });
 
+    let year, month;
+
     let index = 0;
-    if (period !== 'recent') index = 1;
-    const [year, month] = indicatorData.data.observations[index].date.split('-')
+    [year, month] = indicatorData.data.observations[0].date.split('-');
+    if (period != 'current') {
+      [year, month] = getPreviousMonthAndYear(year, month);
+    }
     return [year, month]
   } catch (e) {
     console.error(e);
     throw e;
   }
+}
+
+function getPreviousMonthAndYear(year: string, month: string) {
+  const currentMonth = Number(month);
+  const currentYear = Number(year);
+
+  let previousYear, previousMonth;
+
+  if (currentMonth === 1) {
+    previousMonth = 12;
+    previousYear = currentYear - 1;
+  } else {
+    previousMonth = currentMonth - 1;
+    previousYear = currentYear;
+  }
+
+  return [String(previousYear), ("0" + previousMonth).slice(-2)];
 }
