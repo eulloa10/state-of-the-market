@@ -4,3 +4,10 @@ export interface Indicators {
     frequency: string;
   };
 }
+
+export interface FREDDataPoint {
+  realtime_start: string,
+  realtime_end: string,
+  date: string,
+  value: number
+}

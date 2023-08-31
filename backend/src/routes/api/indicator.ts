@@ -3,6 +3,7 @@ import axios from 'axios';
 import * as dotenv from 'dotenv';
 import * as indicatorReference from '../../data/indicatorReference.json';
 import { Indicators } from '../types/interfaces';
+import { FREDDataPoint } from '../types/interfaces';
 
 
 dotenv.config();
@@ -77,7 +78,8 @@ indicatorRoute.get('/prior', async (req: Request, res: Response) => {
 });
 
 function getLastDay (month: string, year: string) {
-  let lastDay = new Date(Number(year), Number(month)+1, 0).getDate();
+  let lastDay = new Date(Number(year), Number(month), 0).getDate();
+  console.log("LAST DAY", lastDay)
   return String(lastDay);
 }
 
@@ -100,8 +102,20 @@ indicatorRoute.get('/:period', async (req: Request, res: Response) => {
         api_key: process.env.FRED_API_KEY
       }
     })
+
+    const dailyConsolidation = indicatorData.data.observations.reduce((acc: number, obj: FREDDataPoint) => acc + Number(obj.value), 0)
+    let dailyAverage = (dailyConsolidation / indicatorData.data.observations.length).toFixed(2)
+
+    console.log(dailyConsolidation)
+    if (dailyConsolidation === 0) {
+      dailyAverage = "Value not reported"
+    }
+
     res.json({
-      [indicatorName]: indicatorData.data.observations
+      [indicatorName]: {
+        "date": `${periodYear}-${periodMonth}-01`,
+        "value": dailyAverage
+      }
     });
   } catch (e) {
     console.error(e);
