@@ -34,7 +34,7 @@ indicatorRoute.get('/', async (req: Request, res: Response) => {
   }
 });
 
-// TODO: This route will also have to calculate aggregate values for daily indicators
+// TODO: This route will also have to calculate aggregate values for daily indicators. Make use of existing /:period route to execute this
 indicatorRoute.get('/recent', async (req: Request, res: Response) => {
   const baseURL = req.baseUrl.split('/');
   const indicatorName = baseURL[baseURL.length - 1]
@@ -56,7 +56,7 @@ indicatorRoute.get('/recent', async (req: Request, res: Response) => {
   }
 });
 
-// TODO: This route will also have to calculate aggregate values for daily indicators
+// TODO: This route will also have to calculate aggregate values for daily indicators. Make use of existing /:period route to execute this
 indicatorRoute.get('/prior', async (req: Request, res: Response) => {
   const baseURL = req.baseUrl.split('/');
   const indicatorName = baseURL[baseURL.length - 1]
