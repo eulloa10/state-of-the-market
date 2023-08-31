@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv';
 import * as indicatorReference from '../../data/indicatorReference.json';
 import { Indicators } from '../types/interfaces';
 import { FREDDataPoint } from '../types/interfaces';
-import { getLastDay } from '../../utils/dateCalculators';
+import { getLastDayOfMonth } from '../../utils/dateCalculators';
 
 
 dotenv.config();
@@ -83,7 +83,7 @@ indicatorRoute.get('/:period', async (req: Request, res: Response) => {
   const baseURL = req.baseUrl.split('/');
   const indicatorName = baseURL[baseURL.length - 1]
   const [ periodYear, periodMonth ] = req.params.period.split('-')
-  const periodLastDay = getLastDay(periodMonth, periodYear);
+  const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);
 
   try {
     const indicatorData = await axios.get('https://api.stlouisfed.org/fred/series/observations', {
