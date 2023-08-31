@@ -1,13 +1,46 @@
 {
-  "yield-curve": "DGS10",
-  "fed-funds-rate": "EFFR",
-  "case-shiller": "CSUSHPINSA",
-  "unemployment-rate": "UNRATE",
-  "cpi": "CPIAUCSL",
-  "personal-consumption": "PCE",
-  "jolts-openings": "JTSJOL",
-  "jolts-hires": "JTSHIR",
-  "jolts-turnover": "JTSTSR",
-  "personal-savings": "PSAVERT",
-  "consumer-confidence": "CSCICP03USM665S"
+  "yield-curve": {
+    "seriesId": "DGS10",
+    "frequency": "daily"
+  },
+  "fed-funds-rate": {
+    "seriesId": "EFFR",
+    "frequency": "daily"
+  },
+  "case-shiller": {
+    "seriesId": "CSUSHPINSA",
+    "frequency": "monthly"
+  },
+  "unemployment-rate": {
+    "seriesId": "UNRATE",
+    "frequency": "monthly"
+  },
+  "cpi": {
+    "seriesId": "CPIAUCSL",
+    "frequency": "monthly"
+  },
+  "personal-consumption": {
+    "seriesId": "PCE",
+    "frequency": "monthly"
+  },
+  "jolts-openings": {
+    "seriesId": "JTSJOL",
+    "frequency": "monthly"
+  },
+  "jolts-hires": {
+    "seriesId": "JTSHIR",
+    "frequency": "monthly"
+  },
+  "jolts-turnover": {
+    "seriesId": "JTSTSR",
+    "frequency": "monthly"
+  },
+  "personal-savings": {
+    "seriesId": "PSAVERT",
+    "frequency": "monthly"
+  },
+  "consumer-confidence": {
+    "seriesId": "CSCICP03USM665S",
+    "frequency": "monthly"
+  }
 }

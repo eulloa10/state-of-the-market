@@ -1,3 +1,6 @@
 export interface Indicators {
-  [key: string]: string
+  [key: string]: {
+    seriesId: string;
+    frequency: string;
+  };
 }

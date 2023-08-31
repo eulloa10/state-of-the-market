@@ -14,12 +14,11 @@ const indicators: Indicators = indicatorReference;
 indicatorRoute.get('/', async (req: Request, res: Response) => {
   const baseURL = req.baseUrl.split('/');
   const indicatorName = baseURL[baseURL.length - 1]
-  console.log("INDICATOR: ", indicatorName)
 
   try {
     const indicatorData = await axios.get('https://api.stlouisfed.org/fred/series/observations', {
       params: {
-        series_id: indicators[indicatorName],
+        series_id: indicators[indicatorName].seriesId,
         file_type: 'json',
         sort_order: 'desc',
         api_key: process.env.FRED_API_KEY
@@ -33,24 +32,67 @@ indicatorRoute.get('/', async (req: Request, res: Response) => {
   }
 });
 
-indicatorRoute.get('/:period', async (req: Request, res: Response) => {
+indicatorRoute.get('/recent', async (req: Request, res: Response) => {
   const baseURL = req.baseUrl.split('/');
   const indicatorName = baseURL[baseURL.length - 1]
-  console.log("INDICATOR: ", indicatorName)
 
   try {
     const indicatorData = await axios.get('https://api.stlouisfed.org/fred/series/observations', {
       params: {
-        observation_end: req.params.period,
-        observation_start: req.params.period,
-        series_id: indicators[indicatorName],
+        series_id: indicators[indicatorName].seriesId,
         file_type: 'json',
         sort_order: 'desc',
         api_key: process.env.FRED_API_KEY
       }
     })
     res.json({
-      "Yield Curve": indicatorData.data.observations
+      [indicatorName]: indicatorData.data.observations[0]
+    });
+  } catch (e) {
+    console.error(e);
+  }
+});
+
+indicatorRoute.get('/prior', async (req: Request, res: Response) => {
+  const baseURL = req.baseUrl.split('/');
+  const indicatorName = baseURL[baseURL.length - 1]
+
+  try {
+    const indicatorData = await axios.get('https://api.stlouisfed.org/fred/series/observations', {
+      params: {
+        series_id: indicators[indicatorName].seriesId,
+        file_type: 'json',
+        sort_order: 'desc',
+        api_key: process.env.FRED_API_KEY
+      }
+    })
+
+    res.json({
+      [indicatorName]: indicatorData.data.observations[1]
+    });
+  } catch (e) {
+    console.error(e);
+  }
+});
+
+
+indicatorRoute.get('/:period', async (req: Request, res: Response) => {
+  const baseURL = req.baseUrl.split('/');
+  const indicatorName = baseURL[baseURL.length - 1]
+
+  try {
+    const indicatorData = await axios.get('https://api.stlouisfed.org/fred/series/observations', {
+      params: {
+        observation_end: req.params.period,
+        observation_start: req.params.period,
+        series_id: indicators[indicatorName].seriesId,
+        file_type: 'json',
+        sort_order: 'desc',
+        api_key: process.env.FRED_API_KEY
+      }
+    })
+    res.json({
+      [indicatorName]: indicatorData.data.observations
     });
   } catch (e) {
     console.error(e);
