@@ -80,8 +80,9 @@ indicatorRoute.get('/prior', async (req: Request, res: Response) => {
 indicatorRoute.get('/:period', async (req: Request, res: Response) => {
   const baseURL = req.baseUrl.split('/');
   const indicatorName = baseURL[baseURL.length - 1]
-  const periodMonth = req.params.period.split('-')[1]
-  const periodYear = req.params.period.split('-')[0]
+  const [ periodYear, periodMonth ] = req.params.period.split('-')
+
+  console.log("YEAR: ", periodYear, "MONTH: ", periodMonth)
   const periodLastDay = getLastDay(periodMonth, periodYear);
 
   try {
@@ -96,6 +97,7 @@ indicatorRoute.get('/:period', async (req: Request, res: Response) => {
       }
     })
 
+    // Some months have "." as the value. These values need to be skipped so they don't throw off the calculation
     const dailyConsolidation = indicatorData.data.observations.reduce((acc: number, obj: FREDDataPoint) => acc + Number(obj.value), 0)
     let dailyAverage = (dailyConsolidation / indicatorData.data.observations.length).toFixed(2)
 
