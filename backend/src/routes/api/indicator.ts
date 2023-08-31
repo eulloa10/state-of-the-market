@@ -4,6 +4,7 @@ import * as dotenv from 'dotenv';
 import * as indicatorReference from '../../data/indicatorReference.json';
 import { Indicators } from '../types/interfaces';
 import { FREDDataPoint } from '../types/interfaces';
+import { getLastDay } from '../../utils/dateCalculators';
 
 
 dotenv.config();
@@ -36,7 +37,6 @@ indicatorRoute.get('/', async (req: Request, res: Response) => {
 indicatorRoute.get('/recent', async (req: Request, res: Response) => {
   const baseURL = req.baseUrl.split('/');
   const indicatorName = baseURL[baseURL.length - 1]
-  const isDailyIndicator = indicators[indicatorName].frequency == 'daily'
 
   try {
     const indicatorData = await axios.get('https://api.stlouisfed.org/fred/series/observations', {
@@ -77,13 +77,6 @@ indicatorRoute.get('/prior', async (req: Request, res: Response) => {
   }
 });
 
-function getLastDay (month: string, year: string) {
-  let lastDay = new Date(Number(year), Number(month), 0).getDate();
-  console.log("LAST DAY", lastDay)
-  return String(lastDay);
-}
-
-
 indicatorRoute.get('/:period', async (req: Request, res: Response) => {
   const baseURL = req.baseUrl.split('/');
   const indicatorName = baseURL[baseURL.length - 1]
@@ -106,7 +99,6 @@ indicatorRoute.get('/:period', async (req: Request, res: Response) => {
     const dailyConsolidation = indicatorData.data.observations.reduce((acc: number, obj: FREDDataPoint) => acc + Number(obj.value), 0)
     let dailyAverage = (dailyConsolidation / indicatorData.data.observations.length).toFixed(2)
 
-    console.log(dailyConsolidation)
     if (dailyConsolidation === 0) {
       dailyAverage = "Value not reported"
     }
