@@ -76,9 +76,9 @@ indicatorRoute.get('/prior', async (req: Request, res: Response) => {
   }
 });
 
-function firstAndLastDay (month: string, year: string) {
-
-  return []
+function getLastDay (month: string, year: string) {
+  let lastDay = new Date(Number(year), Number(month)+1, 0).getDate();
+  return String(lastDay);
 }
 
 
@@ -87,16 +87,13 @@ indicatorRoute.get('/:period', async (req: Request, res: Response) => {
   const indicatorName = baseURL[baseURL.length - 1]
   const periodMonth = req.params.period.split('-')[1]
   const periodYear = req.params.period.split('-')[0]
-  const today = new Date();
-  const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth()+1, 0);
-  console.log("TODAY: ", today, " LDOM: ", lastDayOfMonth)
-  console.log("PERIOD MONTH AND YEAR", periodMonth, periodYear)
+  const periodLastDay = getLastDay(periodMonth, periodYear);
 
   try {
     const indicatorData = await axios.get('https://api.stlouisfed.org/fred/series/observations', {
       params: {
-        observation_end: `${periodYear}-31-${periodMonth}`,
-        observation_start: `${periodYear}-01-${periodMonth}`,
+        observation_end: `${periodYear}-${periodMonth}-${periodLastDay}`,
+        observation_start: `${periodYear}-${periodMonth}-01`,
         series_id: indicators[indicatorName].seriesId,
         file_type: 'json',
         sort_order: 'desc',
@@ -110,39 +107,3 @@ indicatorRoute.get('/:period', async (req: Request, res: Response) => {
     console.error(e);
   }
 });
-
-// function calcPeriod (date: string) {
-//   console.log("DATESTRING", date)
-//   const currentDate = new Date(String(date));
-//   console.log("DATE INPUT", currentDate)
-//   currentDate.setDate(currentDate.getDate() - 31);
-//   console.log("DATE 30 back", currentDate);
-//   const newDate = currentDate.toISOString().slice(0,10);
-//   console.log("NEW DATE", newDate)
-//   return newDate;
-// }
-
-// yieldCurveRoute.get('/:period', async (req: Request, res: Response) => {
-//   console.log("REQPARAMS", req.params.period)
-//   console.log("TYPE", typeof req.params.period)
-//   const baseURL = req.baseUrl.split('/');
-//   const indicatorName = baseURL[baseURL.length - 1]
-
-//   try {
-//     const yieldCurveData = await axios.get('https://api.stlouisfed.org/fred/series/observations', {
-//       params: {
-//         observation_end: req.params.period,
-//         observation_start: calcPeriod(String(req.params.period)),
-//         series_id: indicators[indicatorName],
-//         file_type: 'json',
-//         sort_order: 'desc',
-//         api_key: process.env.FRED_API_KEY
-//       }
-//     })
-//     res.json({
-//       "Yield Curve": yieldCurveData.data.observations
-//     });
-//   } catch (e) {
-//     console.error(e);
-//   }
-// });
