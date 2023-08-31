@@ -14,6 +14,8 @@ const indicators: Indicators = indicatorReference;
 indicatorRoute.get('/', async (req: Request, res: Response) => {
   const baseURL = req.baseUrl.split('/');
   const indicatorName = baseURL[baseURL.length - 1]
+  const isDailyIndicator = indicators[indicatorName].frequency == 'daily'
+  console.log("ISDAILYINDICATOR", isDailyIndicator)
 
   try {
     const indicatorData = await axios.get('https://api.stlouisfed.org/fred/series/observations', {
