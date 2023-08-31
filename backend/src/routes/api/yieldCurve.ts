@@ -2,15 +2,12 @@ import express, { Request, Response } from 'express';
 import axios from 'axios';
 import * as dotenv from 'dotenv';
 import * as indicatorReference from '../../data/indicator_reference.json';
+import { Indicators } from '../types/interfaces';
 
 
 dotenv.config();
 
 export const yieldCurveRoute = express.Router();
-
-interface Indicators {
-  [key: string]: string
-}
 
 const indicators: Indicators = indicatorReference;
 
@@ -34,27 +31,16 @@ yieldCurveRoute.get('/', async (req: Request, res: Response) => {
   }
 });
 
-function calcDate (date: string) {
-  console.log("DATESTRING", date)
-  const currentDate = new Date(String(date));
-  console.log("DATE INPUT", currentDate)
-  currentDate.setDate(currentDate.getDate() - 31);
-  console.log("DATE 30 back", currentDate);
-  const newDate = currentDate.toISOString().slice(0,10);
-  console.log("NEW DATE", newDate)
-  return newDate;
-}
-
-yieldCurveRoute.get('/:date', async (req: Request, res: Response) => {
-  console.log("REQPARAMS", req.params.date)
-  console.log("TYPE", typeof req.params.date)
+yieldCurveRoute.get('/:period', async (req: Request, res: Response) => {
+  const baseURL = req.baseUrl.split('/');
+  const indicatorName = baseURL[baseURL.length - 1]
 
   try {
     const yieldCurveData = await axios.get('https://api.stlouisfed.org/fred/series/observations', {
       params: {
-        observation_end: req.params.date,
-        observation_start: calcDate(String(req.params.date)),
-        series_id: 'DGS10',
+        observation_end: req.params.period,
+        observation_start: req.params.period,
+        series_id: indicators[indicatorName],
         file_type: 'json',
         sort_order: 'desc',
         api_key: process.env.FRED_API_KEY
@@ -67,3 +53,39 @@ yieldCurveRoute.get('/:date', async (req: Request, res: Response) => {
     console.error(e);
   }
 });
+
+// function calcPeriod (date: string) {
+//   console.log("DATESTRING", date)
+//   const currentDate = new Date(String(date));
+//   console.log("DATE INPUT", currentDate)
+//   currentDate.setDate(currentDate.getDate() - 31);
+//   console.log("DATE 30 back", currentDate);
+//   const newDate = currentDate.toISOString().slice(0,10);
+//   console.log("NEW DATE", newDate)
+//   return newDate;
+// }
+
+// yieldCurveRoute.get('/:period', async (req: Request, res: Response) => {
+//   console.log("REQPARAMS", req.params.period)
+//   console.log("TYPE", typeof req.params.period)
+//   const baseURL = req.baseUrl.split('/');
+//   const indicatorName = baseURL[baseURL.length - 1]
+
+//   try {
+//     const yieldCurveData = await axios.get('https://api.stlouisfed.org/fred/series/observations', {
+//       params: {
+//         observation_end: req.params.period,
+//         observation_start: calcPeriod(String(req.params.period)),
+//         series_id: indicators[indicatorName],
+//         file_type: 'json',
+//         sort_order: 'desc',
+//         api_key: process.env.FRED_API_KEY
+//       }
+//     })
+//     res.json({
+//       "Yield Curve": yieldCurveData.data.observations
+//     });
+//   } catch (e) {
+//     console.error(e);
+//   }
+// });
