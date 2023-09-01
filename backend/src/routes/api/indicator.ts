@@ -1,11 +1,22 @@
-import express, { Request, Response } from 'express';
+import express, {
+  Request,
+  Response
+} from 'express';
 import axios from 'axios';
 import * as dotenv from 'dotenv';
 import * as indicatorReference from '../../data/indicatorReference.json';
-import { Indicators } from '../types/interfaces';
-import { FREDDataPoint } from '../types/interfaces';
-import { getLastDayOfMonth } from '../../utils/dateCalculators';
-import { getMostRecentIndicatorDate } from '../../utils/dateCalculators';
+import {
+  Indicators
+} from '../types/interfaces';
+import {
+  FREDDataPoint
+} from '../types/interfaces';
+import {
+  getLastDayOfMonth
+} from '../../utils/dateCalculators';
+import {
+  getMostRecentIndicatorDate
+} from '../../utils/dateCalculators';
 
 
 dotenv.config();
@@ -32,16 +43,15 @@ indicatorRoute.get('/', async (req: Request, res: Response) => {
     });
   } catch (e) {
     console.error(e);
+    throw e;
   }
 });
 
 
-
-// TODO: This route will also have to calculate aggregate values for daily indicators. Make use of existing /:period route to execute this
 indicatorRoute.get('/recent', async (req: Request, res: Response) => {
   const baseURL = req.baseUrl.split('/');
   const indicatorName = baseURL[baseURL.length - 1];
-  const [ periodYear, periodMonth ] = await getMostRecentIndicatorDate(indicatorName, "recent");
+  const [periodYear, periodMonth] = await getMostRecentIndicatorDate(indicatorName, "recent");
   const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);
 
   try {
@@ -79,14 +89,15 @@ indicatorRoute.get('/recent', async (req: Request, res: Response) => {
     });
   } catch (e) {
     console.error(e);
+    throw e;
   }
 });
 
-// TODO: This route will also have to calculate aggregate values for daily indicators. Make use of existing /:period route to execute this
+
 indicatorRoute.get('/prior', async (req: Request, res: Response) => {
   const baseURL = req.baseUrl.split('/');
   const indicatorName = baseURL[baseURL.length - 1]
-  const [ periodYear, periodMonth ] = await getMostRecentIndicatorDate(indicatorName, "prior");
+  const [periodYear, periodMonth] = await getMostRecentIndicatorDate(indicatorName, "prior");
   console.log("YEAR", periodYear, "MONTH", periodMonth)
   const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);
 
@@ -111,6 +122,7 @@ indicatorRoute.get('/prior', async (req: Request, res: Response) => {
       }
       return acc + Number(obj.value)
     }, 0)
+
     let dailyAverage = (dailyConsolidation / indicatorData.data.observations.length).toFixed(2)
 
     if (dailyConsolidation === 0) {
@@ -125,13 +137,14 @@ indicatorRoute.get('/prior', async (req: Request, res: Response) => {
     });
   } catch (e) {
     console.error(e);
+    throw e;
   }
 });
 
 indicatorRoute.get('/:period', async (req: Request, res: Response) => {
   const baseURL = req.baseUrl.split('/');
   const indicatorName = baseURL[baseURL.length - 1]
-  const [ periodYear, periodMonth ] = req.params.period.split('-')
+  const [periodYear, periodMonth] = req.params.period.split('-')
   const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);
 
   try {
@@ -146,7 +159,6 @@ indicatorRoute.get('/:period', async (req: Request, res: Response) => {
       }
     })
 
-    // TODO: Some months have "." as the value. These values need to be skipped so they don't throw off the calculation. The length of the array should also reflect these invalid values. Bottom lines can probable be put in a helper function
     let invalidValues = 0;
     const dailyConsolidation = indicatorData.data.observations.reduce((acc: number, obj: FREDDataPoint) => {
       if (String(obj.value) === ".") {
@@ -169,5 +181,6 @@ indicatorRoute.get('/:period', async (req: Request, res: Response) => {
     });
   } catch (e) {
     console.error(e);
+    throw e;
   }
 });
