@@ -17,6 +17,7 @@ import {
 import {
   getMostRecentIndicatorDate
 } from '../../utils/dateCalculators';
+import validateIndicator from '../middleware/indicatorValidation';
 
 
 dotenv.config();

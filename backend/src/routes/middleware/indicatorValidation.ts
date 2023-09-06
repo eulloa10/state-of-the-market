@@ -13,7 +13,7 @@ export default function validateIndicator(req: Request, res: Response, next: Nex
   } else {
     res.status(404).json({
       error: 'Parameter not found',
-      message: 'The provided parameter is invalid or not found.'
+      message: `The provided parameter '${indicatorName}' is invalid or not found.`
     });
   }
 }
