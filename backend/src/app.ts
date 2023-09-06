@@ -1,6 +1,7 @@
 import express, { Application } from 'express';
 import morgan from 'morgan';
 import { routes } from './routes';
+import { Sequelize } from 'sequelize';
 
 const app: Application = express();
 
