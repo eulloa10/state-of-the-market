@@ -6,11 +6,6 @@ import {
 
 module.exports = (sequelize: any, DataTypes: any) => {
   class Indicator_Reference extends Model<InferAttributes<Indicator_Reference>, InferCreationAttributes<Indicator_Reference>> {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     declare id: number;
     declare series_id: string;
     declare full_name: string;

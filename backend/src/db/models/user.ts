@@ -7,11 +7,6 @@ import {
 module.exports = (sequelize: any, DataTypes: any) => {
 
   class User extends Model<InferAttributes<User>,InferCreationAttributes<User>> {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     declare id:number;
     declare username:string;
     declare email:string;

@@ -6,11 +6,6 @@ import {
 
 module.exports = (sequelize: any, DataTypes: any) => {
   class Report extends Model<InferAttributes<Report>,InferCreationAttributes<Report>> {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     declare id: number;
     declare report_name: string;
     declare econ_indicator_1_id: number;
