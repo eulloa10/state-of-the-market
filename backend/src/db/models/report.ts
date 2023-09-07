@@ -38,8 +38,12 @@ module.exports = (sequelize: any, DataTypes: any) => {
 
     static associate(models: any) {
       Report.belongsTo(models.User, {
-        foreignKey: 'userId',
+        foreignKey: 'user_id',
         onDelete:'cascade'
+      })
+
+      Report.hasMany(models.Indicator, {
+        foreignKey: 'indicator_id'
       })
     }
   }
