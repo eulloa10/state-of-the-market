@@ -20,6 +20,10 @@ module.exports = (sequelize: any, DataTypes: any) => {
         foreignKey: 'indicator_id',
         onDelete: 'cascade'
       })
+
+      Indicator.hasMany(models.Indicator_Reference, {
+        foreignKey: 'indicator_reference_id'
+      })
     }
   }
   Indicator.init({
