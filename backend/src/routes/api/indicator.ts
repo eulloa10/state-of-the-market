@@ -18,27 +18,14 @@ import {
   getMostRecentIndicatorDate
 } from '../../utils/dateCalculators';
 import validateIndicator from '../middleware/indicatorValidation';
-import db from '../../config/database.js';
-
 
 dotenv.config();
-
-db.connect()
-  .then((obj) => {
-    // You are connected to the database
-    // You can now perform database operations using `obj` if needed
-
-    // For example, run a query
-    // return obj.query('SELECT * FROM your_table');
-    console.log("OBJ: ", obj)
-    console.log("CONNECTED")
-  })
 
 export const indicatorRoute = express.Router();
 
 const indicators: Indicators = indicatorReference;
 
-indicatorRoute.get('/', async (req: Request, res: Response) => {
+indicatorRoute.get('/', validateIndicator, async (req: Request, res: Response) => {
   const baseURL = req.baseUrl.split('/');
   const indicatorName = baseURL[baseURL.length - 1]
 
