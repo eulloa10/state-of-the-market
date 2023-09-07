@@ -18,7 +18,9 @@ module.exports = (sequelize: any, DataTypes: any) => {
     declare hashed_password: string;
 
     static associate(models: any) {
-      // define association here
+      User.belongsToMany(models.Report, {
+        through: 'UserReports'
+      })
     }
   }
   User.init({

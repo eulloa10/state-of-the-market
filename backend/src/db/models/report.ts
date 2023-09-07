@@ -38,7 +38,9 @@ module.exports = (sequelize: any, DataTypes: any) => {
     declare econ_indicator_11_prior_id: number;
 
     static associate(models: any) {
-      // define association here
+      Report.belongsToMany(models.User, {
+        through: 'UserReports'
+      })
     }
   }
   Report.init({
