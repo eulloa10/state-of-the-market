@@ -12,10 +12,10 @@ module.exports = (sequelize: any, DataTypes: any) => {
      * The `models/index` file will call this method automatically.
      */
     declare id: number;
-    declare indicator_series_id: string;
-    declare indicator_full_name: string;
-    declare indicator_abbr_name: string;
-    declare indicator_description: string;
+    declare series_id: string;
+    declare full_name: string;
+    declare abbr_name: string;
+    declare description: string;
 
     static associate(models: any) {
       Indicator_Reference.belongsTo(models.Indicator, {
@@ -31,19 +31,19 @@ module.exports = (sequelize: any, DataTypes: any) => {
       autoIncrement: true,
       primaryKey: true
     },
-    indicator_series_id: {
+    series_id: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    indicator_full_name: {
+    full_name: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    indicator_abbr_name: {
+    abbr_name: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    indicator_description: {
+    description: {
       type: DataTypes.TEXT,
       allowNull: false
     },

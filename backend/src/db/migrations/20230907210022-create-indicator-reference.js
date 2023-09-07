@@ -9,29 +9,31 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      indicator_series_id: {
+      series_id: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      indicator_full_name: {
+      full_name: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      indicator_abbr_name: {
+      abbr_name: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      indicator_description: {
+      description: {
         type: Sequelize.TEXT,
         allowNull: false
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     });
   },
