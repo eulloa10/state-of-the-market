@@ -12,7 +12,6 @@ module.exports = (sequelize: any, DataTypes: any) => {
      * The `models/index` file will call this method automatically.
      */
     declare id: number;
-    declare report_owner_id: number;
     declare report_name: string;
     declare econ_indicator_1_id: number;
     declare econ_indicator_1_prior_id: number;
@@ -38,8 +37,9 @@ module.exports = (sequelize: any, DataTypes: any) => {
     declare econ_indicator_11_prior_id: number;
 
     static associate(models: any) {
-      Report.belongsToMany(models.User, {
-        through: 'UserReports'
+      Report.belongsTo(models.User, {
+        foreignKey: 'userId',
+        onDelete:'cascade'
       })
     }
   }
@@ -49,10 +49,6 @@ module.exports = (sequelize: any, DataTypes: any) => {
       autoIncrement: true,
       allowNull: false,
       unique: true
-    },
-    report_owner_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false
     },
     report_name: {
       type: DataTypes.STRING(20),

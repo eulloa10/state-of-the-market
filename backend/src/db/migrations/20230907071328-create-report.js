@@ -9,10 +9,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      report_owner_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      },
       report_name: {
         type: Sequelize.STRING,
         allowNull: false

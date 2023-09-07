@@ -18,8 +18,8 @@ module.exports = (sequelize: any, DataTypes: any) => {
     declare hashed_password: string;
 
     static associate(models: any) {
-      User.belongsToMany(models.Report, {
-        through: 'UserReports'
+      User.hasMany(models.Report, {
+        foreignKey: 'user_id'
       })
     }
   }
@@ -43,7 +43,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
     hashed_password: {
       type: DataTypes.STRING(20),
       allowNull: false
-    }
+    },
   }, {
     sequelize,
     modelName: 'User',
