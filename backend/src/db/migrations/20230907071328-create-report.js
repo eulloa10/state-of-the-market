@@ -10,16 +10,100 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       report_owner_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       report_name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       econ_indicator_1_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       econ_indicator_1_prior_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      econ_indicator_2_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      econ_indicator_2_prior_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      econ_indicator_3_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      econ_indicator_3_prior_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      econ_indicator_4_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      econ_indicator_4_prior_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      econ_indicator_5_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      econ_indicator_5_prior_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      econ_indicator_6_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      econ_indicator_6_prior_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      econ_indicator_7_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      econ_indicator_7_prior_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      econ_indicator_8_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      econ_indicator_8_prior_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      econ_indicator_9_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      econ_indicator_9_prior_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      econ_indicator_10_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      econ_indicator_10_prior_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      econ_indicator_11_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      econ_indicator_11_prior_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
