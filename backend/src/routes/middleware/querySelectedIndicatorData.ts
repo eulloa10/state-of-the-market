@@ -6,9 +6,9 @@ import {
 import db from '../../db/models';
 import { Indicators } from '../../types/interfaces';
 import * as indicatorReference from '../../data/indicatorReference.json';
-import {
+import
   getLastDayOfMonth
-} from '../../utils/dateCalculators';
+ from '../../utils/getLastDayOfMonth';
 
 const indicators: Indicators = indicatorReference;
 

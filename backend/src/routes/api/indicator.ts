@@ -11,12 +11,11 @@ import {
 import {
   FREDDataPoint
 } from '../../types/interfaces';
-import {
-  getLastDayOfMonth
-} from '../../utils/dateCalculators';
-import {
-  getMostRecentIndicatorDate
-} from '../../utils/dateCalculators';
+import getLastDayOfMonth
+from '../../utils/getLastDayOfMonth';
+import
+getMostRecentIndicatorDate
+from '../../utils/getMostRecentIndicatorDate';
 import validateIndicatorParam from '../middleware/indicatorValidation';
 import queryRecentIndicatorData from '../middleware/queryRecentIndicatorData';
 import queryPriorIndicatorData from '../middleware/queryPriorIndicatorData';

@@ -8,7 +8,7 @@ import { Indicators } from '../../types/interfaces';
 import * as indicatorReference from '../../data/indicatorReference.json';
 import {
   getMostRecentIndicatorDate
-} from '../../utils/dateCalculators';
+} from '../../utils/getMostRecentIndicatorDate';
 
 const indicators: Indicators = indicatorReference;
 
