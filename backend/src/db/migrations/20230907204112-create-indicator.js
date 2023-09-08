@@ -9,6 +9,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      indicator_reference_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
       indicator_value: {
         type: Sequelize.FLOAT,
         allowNull: false

@@ -2,7 +2,7 @@ import axios from 'axios';
 import * as indicatorReference from '../data/indicatorReference.json';
 import {
   Indicators
-} from '../routes/types/interfaces';
+} from '../types/interfaces';
 
 const indicators: Indicators = indicatorReference;
 

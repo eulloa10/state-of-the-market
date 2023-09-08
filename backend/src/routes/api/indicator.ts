@@ -7,17 +7,18 @@ import * as dotenv from 'dotenv';
 import * as indicatorReference from '../../data/indicatorReference.json';
 import {
   Indicators
-} from '../types/interfaces';
+} from '../../types/interfaces';
 import {
   FREDDataPoint
-} from '../types/interfaces';
+} from '../../types/interfaces';
 import {
   getLastDayOfMonth
 } from '../../utils/dateCalculators';
 import {
   getMostRecentIndicatorDate
 } from '../../utils/dateCalculators';
-import validateIndicator from '../middleware/indicatorValidation';
+import validateIndicatorParam from '../middleware/indicatorValidation';
+import queryIndicatorData from '../middleware/checkIndicatorData';
 
 dotenv.config();
 
@@ -25,7 +26,7 @@ export const indicatorRoute = express.Router();
 
 const indicators: Indicators = indicatorReference;
 
-indicatorRoute.get('/', validateIndicator, async (req: Request, res: Response) => {
+indicatorRoute.get('/', validateIndicatorParam, queryIndicatorData, async (req: Request, res: Response) => {
   const baseURL = req.baseUrl.split('/');
   const indicatorName = baseURL[baseURL.length - 1]
 

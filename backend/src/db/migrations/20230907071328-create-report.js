@@ -13,6 +13,14 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      user_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      indicator_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
       econ_indicator_1_id: {
         type: Sequelize.INTEGER
       },

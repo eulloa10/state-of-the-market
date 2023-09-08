@@ -5,7 +5,7 @@ import express, {
 } from 'express';
 import indicatorReference from '../../data/indicatorReference.json';
 
-export default function validateIndicator(req: Request, res: Response, next: NextFunction) {
+export default function validateIndicatorParam(req: Request, res: Response, next: NextFunction) {
   const baseURL = req.baseUrl.split('/');
   const indicatorName = baseURL[baseURL.length - 1]
   if (indicatorName in indicatorReference) {

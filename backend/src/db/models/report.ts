@@ -7,6 +7,8 @@ import {
 module.exports = (sequelize: any, DataTypes: any) => {
   class Report extends Model<InferAttributes<Report>,InferCreationAttributes<Report>> {
     declare id: number;
+    declare indicator_id: number;
+    declare user_id: number;
     declare report_name: string;
     declare econ_indicator_1_id: number;
     declare econ_indicator_1_prior_id: number;
@@ -34,11 +36,12 @@ module.exports = (sequelize: any, DataTypes: any) => {
     static associate(models: any) {
       Report.belongsTo(models.User, {
         foreignKey: 'user_id',
-        onDelete:'cascade'
+        onDelete: 'cascade'
       })
 
-      Report.hasMany(models.Indicator, {
-        foreignKey: 'indicator_id'
+      Report.belongsTo(models.Indicator, {
+        foreignKey: 'indicator_id',
+        onDelete: 'cascade'
       })
     }
   }
@@ -47,7 +50,15 @@ module.exports = (sequelize: any, DataTypes: any) => {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       allowNull: false,
-      unique: true
+      primaryKey: true
+    },
+    indicator_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
     report_name: {
       type: DataTypes.STRING(20),

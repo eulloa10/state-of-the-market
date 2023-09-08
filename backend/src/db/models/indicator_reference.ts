@@ -13,9 +13,8 @@ module.exports = (sequelize: any, DataTypes: any) => {
     declare description: string;
 
     static associate(models: any) {
-      Indicator_Reference.belongsTo(models.Indicator, {
+      Indicator_Reference.hasMany(models.Indicator, {
         foreignKey: 'indicator_reference_id',
-        onDelete: 'cascade'
       })
     }
   }
