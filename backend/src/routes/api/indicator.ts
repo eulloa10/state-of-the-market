@@ -21,6 +21,7 @@ import validateIndicatorParam from '../middleware/indicatorValidation';
 import queryRecentIndicatorData from '../middleware/queryRecentIndicatorData';
 import queryPriorIndicatorData from '../middleware/queryPriorIndicatorData';
 import db from '../../db/models';
+import querySelectedIndicatorData from '../middleware/querySelectedIndicatorData';
 
 dotenv.config();
 
@@ -182,7 +183,7 @@ indicatorRoute.get('/prior', queryPriorIndicatorData, async (req: Request, res: 
   }
 });
 
-indicatorRoute.get('/:period', async (req: Request, res: Response) => {
+indicatorRoute.get('/:period', querySelectedIndicatorData, async (req: Request, res: Response) => {
   const baseURL = req.baseUrl.split('/');
   const indicatorName = baseURL[baseURL.length - 1]
   const [periodYear, periodMonth] = req.params.period.split('-')
@@ -212,6 +213,26 @@ indicatorRoute.get('/:period', async (req: Request, res: Response) => {
 
     if (dailyConsolidation === 0) {
       dailyAverage = "Value not reported"
+    }
+
+    if (req.indicatorQueryData) {
+      const data = req.indicatorQueryData.dataValues;
+      const selectedIndicator = await db.Indicator.findByPk(data.id)
+      selectedIndicator.set({
+        'indicator_value': dailyAverage
+      });
+      await selectedIndicator.save();
+    } else {
+      const indicatorReferenceId = await db.Indicator_Reference.findOne({
+        where: {
+          series_id: indicators[indicatorName].seriesId
+        }
+      })
+      const newIndicatorData = await db.Indicator.create({
+        'indicator_reference_id': indicatorReferenceId.dataValues.id,
+        'indicator_value': dailyAverage,
+        'indicator_date': `${periodYear}-${periodMonth}-01`
+      })
     }
 
     res.json({
