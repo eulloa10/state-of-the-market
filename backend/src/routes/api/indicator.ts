@@ -18,7 +18,8 @@ import {
   getMostRecentIndicatorDate
 } from '../../utils/dateCalculators';
 import validateIndicatorParam from '../middleware/indicatorValidation';
-import queryIndicatorData from '../middleware/checkIndicatorData';
+import queryRecentIndicatorData from '../middleware/queryIndicatorData';
+import db from '../../db/models';
 
 dotenv.config();
 
@@ -26,7 +27,7 @@ export const indicatorRoute = express.Router();
 
 const indicators: Indicators = indicatorReference;
 
-indicatorRoute.get('/', validateIndicatorParam, queryIndicatorData, async (req: Request, res: Response) => {
+indicatorRoute.get('/', validateIndicatorParam, async (req: Request, res: Response) => {
   const baseURL = req.baseUrl.split('/');
   const indicatorName = baseURL[baseURL.length - 1]
 
@@ -49,7 +50,7 @@ indicatorRoute.get('/', validateIndicatorParam, queryIndicatorData, async (req: 
 });
 
 
-indicatorRoute.get('/recent', async (req: Request, res: Response) => {
+indicatorRoute.get('/recent', queryRecentIndicatorData, async (req: Request, res: Response) => {
   const baseURL = req.baseUrl.split('/');
   const indicatorName = baseURL[baseURL.length - 1];
   const [periodYear, periodMonth] = await getMostRecentIndicatorDate(indicatorName, "recent");
@@ -76,12 +77,32 @@ indicatorRoute.get('/recent', async (req: Request, res: Response) => {
       }
       return acc + Number(obj.value)
     }, 0)
-    let dailyAverage = (dailyConsolidation / indicatorData.data.observations.length).toFixed(2)
+
+    let dailyAverage = (dailyConsolidation / (indicatorData.data.observations.length - invalidValues)).toFixed(2)
 
     if (dailyConsolidation === 0) {
       dailyAverage = "Value not reported"
     }
 
+    if (req.indicatorQueryData) {
+      const data = req.indicatorQueryData.dataValues;
+      const selectedIndicator = await db.Indicator.findByPk(data.id)
+      selectedIndicator.set({
+        'indicator_value': dailyAverage
+      });
+      await selectedIndicator.save();
+    } else {
+      const indicatorReferenceId = await db.Indicator_Reference.findOne({
+        where: {
+          series_id: indicators[indicatorName].seriesId
+        }
+      })
+      const newIndicatorData = await db.Indicator.create({
+        'indicator_reference_id': indicatorReferenceId.dataValues.id,
+        'indicator_value': dailyAverage,
+        'indicator_date':  `${periodYear}-${periodMonth}-01`
+      })
+    }
     res.json({
       [indicatorName]: {
         "date": `${periodYear}-${periodMonth}-01`,
