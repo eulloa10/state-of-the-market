@@ -6,12 +6,8 @@ import {
 import db from '../../db/models';
 import { Indicators } from '../../types/interfaces';
 import * as indicatorReference from '../../data/indicatorReference.json';
-import {
-  getLastDayOfMonth
-} from '../../utils/getMostRecentIndicatorDate';
-import {
-  getMostRecentIndicatorDate
-} from '../../utils/getMostRecentIndicatorDate';
+import getLastDayOfMonth from '../../utils/getLastDayOfMonth';
+import getMostRecentIndicatorDate from '../../utils/getMostRecentIndicatorDate';
 
 const indicators: Indicators = indicatorReference;
 

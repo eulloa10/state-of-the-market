@@ -18,6 +18,7 @@
     "pg-promise": "^11.5.4",
     "reflect-metadata": "^0.1.13",
     "sequelize": "^6.32.1",
+    "sib-api-v3-typescript": "^2.2.2",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0"
   },
