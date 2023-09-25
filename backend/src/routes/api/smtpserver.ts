@@ -10,13 +10,38 @@ apiKey.apiKey = process.env.SMTP_API_KEY;
 
 let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
 
-sendSmtpEmail.subject = "My Report";
-sendSmtpEmail.htmlContent = "<html><body><h1>This is my first transactional email {{params.parameter}}</h1></body></html>";
-sendSmtpEmail.sender = {"name":"State of the Market","email":"app@gmail.com"};
-sendSmtpEmail.to = [{"email":"user@gmail.com","name":"Ed"}];
-sendSmtpEmail.replyTo = {"email":"replytoemail@gmail.com","name":"SOTM"};
-sendSmtpEmail.headers = {"Some-Custom-Name":"unique-id-1234"};
-sendSmtpEmail.params = {"parameter":"My param value","subject":"SOTM Report"};
+// TODO:Move date functionality to utils
+const date = new Date();
+
+let monthName = date.toLocaleString('default', { month: 'long' });
+let year = date.getFullYear();
+
+let reportDate = `${monthName} ${year}`;
+
+sendSmtpEmail.subject = "State of the Market Report - {{params.reportDate}}";
+sendSmtpEmail.htmlContent = "<html><body><h1>Attached is the {{params.reportDate}} report</h1></body></html>";
+sendSmtpEmail.sender = {
+  "name": process.env.SMTP_SENDER_NAME,
+  "email": process.env.SMTP_SENDER_EMAIL
+};
+sendSmtpEmail.to = [{
+  "email":"user@gmail.com",
+  "name":"Ed"
+}];
+sendSmtpEmail.replyTo = {
+  "email": process.env.SMTP_SENDER_EMAIL,
+  "name": process.env.SMTP_SENDER_NAME
+};
+sendSmtpEmail.headers = {
+  "Some-Custom-Name":"unique-id-1234"
+};
+sendSmtpEmail.params = {
+  "parameter":"My param value",
+  "subject":"State of the Market Report",
+  "reportDate": reportDate
+};
+
+console.log("SENDSMTPEMAIL", sendSmtpEmail)
 
 
 // sendSmtpEmail.subject = "My {{params.subject}}";
@@ -27,8 +52,8 @@ sendSmtpEmail.params = {"parameter":"My param value","subject":"SOTM Report"};
 // sendSmtpEmail.headers = {"Some-Custom-Name":"unique-id-1234"};
 // sendSmtpEmail.params = {"parameter":"My param value","subject":"New Subject"};
 
-apiInstance.sendTransacEmail(sendSmtpEmail).then(function(data: any) {
-  console.log('API called successfully. Returned data: ' + JSON.stringify(data));
-}, function(error: any) {
-  console.error(error);
-});
+// apiInstance.sendTransacEmail(sendSmtpEmail).then(function(data: any) {
+//   console.log('API called successfully. Returned data: ' + JSON.stringify(data));
+// }, function(error: any) {
+//   console.error(error);
+// });
