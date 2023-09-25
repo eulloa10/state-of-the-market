@@ -1,7 +1,7 @@
 const SibApiV3Sdk = require('sib-api-v3-typescript');
-import * as dotenv from 'dotenv';
+const dotenv = require('dotenv')
 
-dotenv.config();
+dotenv.config({ path: '../../../.env' });
 
 let apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
@@ -10,13 +10,10 @@ apiKey.apiKey = process.env.SMTP_API_KEY;
 
 let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
 
-console.log("TEST")
-console.log(sendSmtpEmail)
-
 sendSmtpEmail.subject = "My Report";
 sendSmtpEmail.htmlContent = "<html><body><h1>This is my first transactional email {{params.parameter}}</h1></body></html>";
-sendSmtpEmail.sender = {"name":"John Doe","email":"senderemail@gmail.com"};
-sendSmtpEmail.to = [{"email":"personemail@gmail.com","name":"Ed"}];
+sendSmtpEmail.sender = {"name":"State of the Market","email":"app@gmail.com"};
+sendSmtpEmail.to = [{"email":"user@gmail.com","name":"Ed"}];
 sendSmtpEmail.replyTo = {"email":"replytoemail@gmail.com","name":"SOTM"};
 sendSmtpEmail.headers = {"Some-Custom-Name":"unique-id-1234"};
 sendSmtpEmail.params = {"parameter":"My param value","subject":"SOTM Report"};
