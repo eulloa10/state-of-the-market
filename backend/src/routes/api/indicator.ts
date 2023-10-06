@@ -8,9 +8,6 @@ import * as indicatorReference from '../../data/indicatorReference.json';
 import {
   Indicators
 } from '../../types/interfaces';
-import {
-  FREDDataPoint
-} from '../../types/interfaces';
 import getLastDayOfMonth
 from '../../utils/getLastDayOfMonth';
 import
