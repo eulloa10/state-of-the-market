@@ -173,19 +173,7 @@ indicatorRoute.get('/:period', querySelectedIndicatorData, async (req: Request, 
       }
     })
 
-    let invalidValues = 0;
-    const dailyConsolidation = indicatorData.data.observations.reduce((acc: number, obj: FREDDataPoint) => {
-      if (String(obj.value) === ".") {
-        invalidValues++;
-        return acc;
-      }
-      return acc + Number(obj.value)
-    }, 0)
-    let dailyAverage = (dailyConsolidation / (indicatorData.data.observations.length - invalidValues)).toFixed(2)
-
-    if (dailyConsolidation === 0) {
-      dailyAverage = "Value not reported"
-    }
+    let dailyAverage = calcAvgIndicatorValue(indicatorData.data.observations);
 
     if (req.indicatorQueryData) {
       const data = req.indicatorQueryData.dataValues;
