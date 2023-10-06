@@ -7,3 +7,4 @@ export const apiRoutes = express.Router();
 apiRoutes.use(morgan('dev'));
 
 apiRoutes.use('/indicator/:indicatorRoute', validateIndicator, indicatorRoute);
+apiRoutes.use('/indicators', indicatorRoute);
