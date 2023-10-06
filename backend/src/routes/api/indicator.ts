@@ -26,7 +26,7 @@ export const indicatorRoute = express.Router();
 
 const indicators: Indicators = indicatorReference;
 
-indicatorRoute.get('/', validateIndicatorParam, async (req: Request, res: Response) => {
+indicatorRoute.get('/', async (req: Request, res: Response) => {
   const baseURL = req.baseUrl.split('/');
   const indicatorName = baseURL[baseURL.length - 1]
 
