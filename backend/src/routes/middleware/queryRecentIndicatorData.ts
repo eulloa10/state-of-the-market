@@ -15,7 +15,6 @@ export default async function queryRecentIndicatorData(req: Request, res:Respons
   const baseURL = req.baseUrl.split('/');
   const indicatorName = baseURL[baseURL.length - 1]
   const [periodYear, periodMonth] = await getMostRecentIndicatorDate(indicatorName, "recent");
-  const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);
 
   try {
     const indicatorId = await db.Indicator_Reference.findOne({
