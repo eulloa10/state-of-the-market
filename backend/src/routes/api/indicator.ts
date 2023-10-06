@@ -13,12 +13,12 @@ from '../../utils/getLastDayOfMonth';
 import
 getMostRecentIndicatorDate
 from '../../utils/getMostRecentIndicatorDate';
-import validateIndicatorParam from '../middleware/indicatorValidation';
 import queryRecentIndicatorData from '../middleware/queryRecentIndicatorData';
 import queryPriorIndicatorData from '../middleware/queryPriorIndicatorData';
 import db from '../../db/models';
 import querySelectedIndicatorData from '../middleware/querySelectedIndicatorData';
 import calcAvgIndicatorValue from '../../utils/calcAvgIndicatorValue';
+import parseIndicatorName from '../../utils/parseIndicatorName';
 
 dotenv.config();
 
@@ -26,9 +26,9 @@ export const indicatorRoute = express.Router();
 
 const indicators: Indicators = indicatorReference;
 
+// Get all data for a given indicator
 indicatorRoute.get('/', async (req: Request, res: Response) => {
-  const baseURL = req.baseUrl.split('/');
-  const indicatorName = baseURL[baseURL.length - 1]
+  const indicatorName = parseIndicatorName(req.baseUrl);
 
   try {
     const indicatorData = await axios.get('https://api.stlouisfed.org/fred/series/observations', {
@@ -48,10 +48,9 @@ indicatorRoute.get('/', async (req: Request, res: Response) => {
   }
 });
 
-
-indicatorRoute.get('/recent', queryRecentIndicatorData, async (req: Request, res: Response) => {
-  const baseURL = req.baseUrl.split('/');
-  const indicatorName = baseURL[baseURL.length - 1];
+// Get most recent data for given indicator
+indicatorRoute.get('/recent', async (req: Request, res: Response) => {
+  const indicatorName = parseIndicatorName(req.baseUrl);
   const [periodYear, periodMonth] = await getMostRecentIndicatorDate(indicatorName, "recent");
   const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);
 
@@ -102,8 +101,7 @@ indicatorRoute.get('/recent', queryRecentIndicatorData, async (req: Request, res
 
 
 indicatorRoute.get('/prior', queryPriorIndicatorData, async (req: Request, res: Response) => {
-  const baseURL = req.baseUrl.split('/');
-  const indicatorName = baseURL[baseURL.length - 1]
+  const indicatorName = parseIndicatorName(req.baseUrl);
   const [periodYear, periodMonth] = await getMostRecentIndicatorDate(indicatorName, "prior");
   const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);
 
@@ -153,8 +151,7 @@ indicatorRoute.get('/prior', queryPriorIndicatorData, async (req: Request, res: 
 });
 
 indicatorRoute.get('/:period', querySelectedIndicatorData, async (req: Request, res: Response) => {
-  const baseURL = req.baseUrl.split('/');
-  const indicatorName = baseURL[baseURL.length - 1]
+  const indicatorName = parseIndicatorName(req.baseUrl);
   const [periodYear, periodMonth] = req.params.period.split('-')
   const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);
 
