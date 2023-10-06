@@ -1,4 +1,5 @@
 import express, {
+  NextFunction,
   Request,
   Response
 } from 'express';
@@ -13,10 +14,7 @@ from '../../utils/getLastDayOfMonth';
 import
 getMostRecentIndicatorDate
 from '../../utils/getMostRecentIndicatorDate';
-import queryRecentIndicatorData from '../middleware/queryRecentIndicatorData';
-import queryPriorIndicatorData from '../middleware/queryPriorIndicatorData';
 import db from '../../db/models';
-import querySelectedIndicatorData from '../middleware/querySelectedIndicatorData';
 import calcAvgIndicatorValue from '../../utils/calcAvgIndicatorValue';
 import parseIndicatorName from '../../utils/parseIndicatorName';
 
@@ -26,7 +24,6 @@ export const indicatorRoute = express.Router();
 
 const indicators: Indicators = indicatorReference;
 
-// Get all data for a given indicator
 indicatorRoute.get('/', async (req: Request, res: Response) => {
   const indicatorName = parseIndicatorName(req.baseUrl);
 
@@ -48,10 +45,20 @@ indicatorRoute.get('/', async (req: Request, res: Response) => {
   }
 });
 
-// Get most recent data for given indicator
-indicatorRoute.get('/recent', async (req: Request, res: Response) => {
+indicatorRoute.get('/:period', async (req: Request, res: Response, next: NextFunction) => {
   const indicatorName = parseIndicatorName(req.baseUrl);
-  const [periodYear, periodMonth] = await getMostRecentIndicatorDate(indicatorName, "recent");
+  let periodYear;
+  let periodMonth;
+
+  if (req.params.period === 'recent') {
+    [periodYear, periodMonth] = await getMostRecentIndicatorDate(indicatorName, "recent");
+  } else if (req.params.period === 'prior') {
+    [periodYear, periodMonth] = await getMostRecentIndicatorDate(indicatorName, "prior");
+  } else {
+    next();
+    return;
+  }
+
   const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);
 
   try {
@@ -68,25 +75,6 @@ indicatorRoute.get('/recent', async (req: Request, res: Response) => {
 
     let dailyAverage = calcAvgIndicatorValue(indicatorData.data.observations);
 
-    if (req.indicatorQueryData) {
-      const data = req.indicatorQueryData.dataValues;
-      const selectedIndicator = await db.Indicator.findByPk(data.id)
-      selectedIndicator.set({
-        'indicator_value': dailyAverage
-      });
-      await selectedIndicator.save();
-    } else {
-      const indicatorReferenceId = await db.Indicator_Reference.findOne({
-        where: {
-          series_id: indicators[indicatorName].seriesId
-        }
-      })
-      const newIndicatorData = await db.Indicator.create({
-        'indicator_reference_id': indicatorReferenceId.dataValues.id,
-        'indicator_value': dailyAverage,
-        'indicator_date': `${periodYear}-${periodMonth}-01`
-      })
-    }
     res.json({
       [indicatorName]: {
         "date": `${periodYear}-${periodMonth}-01`,
@@ -99,10 +87,9 @@ indicatorRoute.get('/recent', async (req: Request, res: Response) => {
   }
 });
 
-
-indicatorRoute.get('/prior', queryPriorIndicatorData, async (req: Request, res: Response) => {
+indicatorRoute.get('/period/:yearMonth', async (req: Request, res: Response) => {
   const indicatorName = parseIndicatorName(req.baseUrl);
-  const [periodYear, periodMonth] = await getMostRecentIndicatorDate(indicatorName, "prior");
+  const [periodYear, periodMonth] = req.params.yearMonth.split('-')
   const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);
 
   try {
@@ -119,25 +106,6 @@ indicatorRoute.get('/prior', queryPriorIndicatorData, async (req: Request, res: 
 
     let dailyAverage = calcAvgIndicatorValue(indicatorData.data.observations);
 
-    if (req.indicatorQueryData) {
-      const data = req.indicatorQueryData.dataValues;
-      const selectedIndicator = await db.Indicator.findByPk(data.id)
-      selectedIndicator.set({
-        'indicator_value': dailyAverage
-      });
-      await selectedIndicator.save();
-    } else {
-      const indicatorReferenceId = await db.Indicator_Reference.findOne({
-        where: {
-          series_id: indicators[indicatorName].seriesId
-        }
-      })
-      const newIndicatorData = await db.Indicator.create({
-        'indicator_reference_id': indicatorReferenceId.dataValues.id,
-        'indicator_value': dailyAverage,
-        'indicator_date': `${periodYear}-${periodMonth}-01`
-      })
-    }
     res.json({
       [indicatorName]: {
         "date": `${periodYear}-${periodMonth}-01`,
@@ -150,53 +118,104 @@ indicatorRoute.get('/prior', queryPriorIndicatorData, async (req: Request, res: 
   }
 });
 
-indicatorRoute.get('/:period', querySelectedIndicatorData, async (req: Request, res: Response) => {
-  const indicatorName = parseIndicatorName(req.baseUrl);
-  const [periodYear, periodMonth] = req.params.period.split('-')
-  const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);
+// // Get most recent data for given indicator
+// indicatorRoute.get('/recent', async (req: Request, res: Response) => {
+//   const indicatorName = parseIndicatorName(req.baseUrl);
+//   const [periodYear, periodMonth] = await getMostRecentIndicatorDate(indicatorName, "recent");
+//   const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);
 
-  try {
-    const indicatorData = await axios.get('https://api.stlouisfed.org/fred/series/observations', {
-      params: {
-        observation_end: `${periodYear}-${periodMonth}-${periodLastDay}`,
-        observation_start: `${periodYear}-${periodMonth}-01`,
-        series_id: indicators[indicatorName].seriesId,
-        file_type: 'json',
-        sort_order: 'desc',
-        api_key: process.env.FRED_API_KEY
-      }
-    })
+//   try {
+//     const indicatorData = await axios.get('https://api.stlouisfed.org/fred/series/observations', {
+//       params: {
+//         observation_end: `${periodYear}-${periodMonth}-${periodLastDay}`,
+//         observation_start: `${periodYear}-${periodMonth}-01`,
+//         series_id: indicators[indicatorName].seriesId,
+//         file_type: 'json',
+//         sort_order: 'desc',
+//         api_key: process.env.FRED_API_KEY
+//       }
+//     })
 
-    let dailyAverage = calcAvgIndicatorValue(indicatorData.data.observations);
+//     let dailyAverage = calcAvgIndicatorValue(indicatorData.data.observations);
 
-    if (req.indicatorQueryData) {
-      const data = req.indicatorQueryData.dataValues;
-      const selectedIndicator = await db.Indicator.findByPk(data.id)
-      selectedIndicator.set({
-        'indicator_value': dailyAverage
-      });
-      await selectedIndicator.save();
-    } else {
-      const indicatorReferenceId = await db.Indicator_Reference.findOne({
-        where: {
-          series_id: indicators[indicatorName].seriesId
-        }
-      })
-      const newIndicatorData = await db.Indicator.create({
-        'indicator_reference_id': indicatorReferenceId.dataValues.id,
-        'indicator_value': dailyAverage,
-        'indicator_date': `${periodYear}-${periodMonth}-01`
-      })
-    }
+//     if (req.indicatorQueryData) {
+//       const data = req.indicatorQueryData.dataValues;
+//       const selectedIndicator = await db.Indicator.findByPk(data.id)
+//       selectedIndicator.set({
+//         'indicator_value': dailyAverage
+//       });
+//       await selectedIndicator.save();
+//     } else {
+//       const indicatorReferenceId = await db.Indicator_Reference.findOne({
+//         where: {
+//           series_id: indicators[indicatorName].seriesId
+//         }
+//       })
+//       const newIndicatorData = await db.Indicator.create({
+//         'indicator_reference_id': indicatorReferenceId.dataValues.id,
+//         'indicator_value': dailyAverage,
+//         'indicator_date': `${periodYear}-${periodMonth}-01`
+//       })
+//     }
+//     res.json({
+//       [indicatorName]: {
+//         "date": `${periodYear}-${periodMonth}-01`,
+//         "value": dailyAverage
+//       }
+//     });
+//   } catch (e) {
+//     console.error(e);
+//     throw e;
+//   }
+// });
 
-    res.json({
-      [indicatorName]: {
-        "date": `${periodYear}-${periodMonth}-01`,
-        "value": dailyAverage
-      }
-    });
-  } catch (e) {
-    console.error(e);
-    throw e;
-  }
-});
+
+// indicatorRoute.get('/prior', queryPriorIndicatorData, async (req: Request, res: Response) => {
+//   const indicatorName = parseIndicatorName(req.baseUrl);
+//   const [periodYear, periodMonth] = await getMostRecentIndicatorDate(indicatorName, "prior");
+//   const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);
+
+//   try {
+//     const indicatorData = await axios.get('https://api.stlouisfed.org/fred/series/observations', {
+//       params: {
+//         observation_end: `${periodYear}-${periodMonth}-${periodLastDay}`,
+//         observation_start: `${periodYear}-${periodMonth}-01`,
+//         series_id: indicators[indicatorName].seriesId,
+//         file_type: 'json',
+//         sort_order: 'desc',
+//         api_key: process.env.FRED_API_KEY
+//       }
+//     })
+
+//     let dailyAverage = calcAvgIndicatorValue(indicatorData.data.observations);
+
+//     if (req.indicatorQueryData) {
+//       const data = req.indicatorQueryData.dataValues;
+//       const selectedIndicator = await db.Indicator.findByPk(data.id)
+//       selectedIndicator.set({
+//         'indicator_value': dailyAverage
+//       });
+//       await selectedIndicator.save();
+//     } else {
+//       const indicatorReferenceId = await db.Indicator_Reference.findOne({
+//         where: {
+//           series_id: indicators[indicatorName].seriesId
+//         }
+//       })
+//       const newIndicatorData = await db.Indicator.create({
+//         'indicator_reference_id': indicatorReferenceId.dataValues.id,
+//         'indicator_value': dailyAverage,
+//         'indicator_date': `${periodYear}-${periodMonth}-01`
+//       })
+//     }
+//     res.json({
+//       [indicatorName]: {
+//         "date": `${periodYear}-${periodMonth}-01`,
+//         "value": dailyAverage
+//       }
+//     });
+//   } catch (e) {
+//     console.error(e);
+//     throw e;
+//   }
+// });
