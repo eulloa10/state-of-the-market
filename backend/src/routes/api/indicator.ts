@@ -24,6 +24,13 @@ export const indicatorRoute = express.Router();
 
 const indicators: Indicators = indicatorReference;
 
+type IndicatorData = {
+  [key: string]: {
+    date: string;
+    value: number | string;
+  };
+};
+
 indicatorRoute.get('/', async (req: Request, res: Response) => {
   const indicatorName = parseIndicatorName(req.baseUrl);
 
@@ -46,46 +53,47 @@ indicatorRoute.get('/', async (req: Request, res: Response) => {
 });
 
 indicatorRoute.get('/all/:period', async (req: Request, res: Response, next: NextFunction) => {
-  let indicators = Object.keys(indicatorReference);
-  console.log("INDICATORS: ", indicators)
-  let periodYear;
-  let periodMonth;
+  const indicatorNames = Object.keys(indicatorReference);
+  const indicatorData: IndicatorData = {};
 
-  // if (req.params.period === 'recent') {
-  //   [periodYear, periodMonth] = await getMostRecentIndicatorDate(indicatorName, "recent");
-  // } else if (req.params.period === 'prior') {
-  //   [periodYear, periodMonth] = await getMostRecentIndicatorDate(indicatorName, "prior");
-  // } else {
-  //   next();
-  //   return;
-  // }
+  for (const indicatorName of indicatorNames) {
+    let periodYear;
+    let periodMonth;
 
-  // const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);
+    if (req.params.period === 'recent') {
+      [periodYear, periodMonth] = await getMostRecentIndicatorDate(indicatorName, 'recent');
+    } else if (req.params.period === 'prior') {
+      [periodYear, periodMonth] = await getMostRecentIndicatorDate(indicatorName, 'prior');
+    } else {
+      return res.status(400).json({ error: 'Invalid period' });
+    }
 
-  // try {
-  //   const indicatorData = await axios.get('https://api.stlouisfed.org/fred/series/observations', {
-  //     params: {
-  //       observation_end: `${periodYear}-${periodMonth}-${periodLastDay}`,
-  //       observation_start: `${periodYear}-${periodMonth}-01`,
-  //       series_id: indicators[indicatorName].seriesId,
-  //       file_type: 'json',
-  //       sort_order: 'desc',
-  //       api_key: process.env.FRED_API_KEY
-  //     }
-  //   })
+    const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);
 
-  //   let dailyAverage = calcAvgIndicatorValue(indicatorData.data.observations);
+    try {
+      const indicatorDataResponse = await axios.get('https://api.stlouisfed.org/fred/series/observations', {
+        params: {
+          observation_end: `${periodYear}-${periodMonth}-${periodLastDay}`,
+          observation_start: `${periodYear}-${periodMonth}-01`,
+          series_id: indicators[indicatorName].seriesId,
+          file_type: 'json',
+          sort_order: 'desc',
+          api_key: process.env.FRED_API_KEY
+        }
+      });
 
-  //   res.json({
-  //     [indicatorName]: {
-  //       "date": `${periodYear}-${periodMonth}-01`,
-  //       "value": dailyAverage
-  //     }
-  //   });
-  // } catch (e) {
-  //   console.error(e);
-  //   throw e;
-  // }
+      const dailyAverage = calcAvgIndicatorValue(indicatorDataResponse.data.observations);
+
+      indicatorData[indicatorName] = {
+        date: `${periodYear}-${periodMonth}-01`,
+        value: dailyAverage
+      };
+    } catch (e) {
+      console.error(e);
+      return res.status(500).json({ error: 'An error occurred while fetching indicator data' });
+    }
+  }
+  res.json(indicatorData);
 });
 
 indicatorRoute.get('/:period', async (req: Request, res: Response, next: NextFunction) => {
