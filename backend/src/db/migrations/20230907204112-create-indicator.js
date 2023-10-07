@@ -32,8 +32,15 @@ module.exports = {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     });
+
+    await queryInterface.addConstraint('Indicators', {
+      type: 'unique',
+      name: 'indicatorValueDateCompositeKey',
+      fields: ['indicator_value', 'indicator_date'],
+    });
   },
   async down(queryInterface, Sequelize) {
+    await queryInterface.removeConstraint('Indicators', 'indicatorValueDateCompositeKey');
     await queryInterface.dropTable('Indicators');
   }
 };

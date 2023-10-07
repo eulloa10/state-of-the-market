@@ -45,5 +45,12 @@ module.exports = (sequelize: any, DataTypes: any) => {
     sequelize,
     modelName: 'Indicator',
   });
+
+  sequelize.addConstraint('Indicators', {
+    type: 'unique',
+    name: 'indicatorValueDateCompositeKey',
+    fields: ['indicator_value', 'indicator_date'],
+  });
+
   return Indicator;
 };
