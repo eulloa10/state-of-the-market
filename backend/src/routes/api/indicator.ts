@@ -84,6 +84,27 @@ indicatorRoute.get('/all/:period', async (req: Request, res: Response, next: Nex
 
       const dailyAverage = calcAvgIndicatorValue(indicatorDataResponse.data.observations);
 
+      const reference = await db.Indicator_Reference.findOne({
+        where: { series_id: indicators[indicatorName].seriesId },
+      });
+
+      const indicatorRecordExists = await db.Indicator.findOne({
+        where: {
+          indicator_value: dailyAverage,
+          indicator_date: `${periodYear}-${periodMonth}-01`
+         },
+      });
+
+      console.log("INDICATOREXISTS: ", indicatorRecordExists)
+
+      if (!indicatorRecordExists) {
+        await db.Indicator.create({
+          indicator_reference_id: reference.id,
+          indicator_value: dailyAverage,
+          indicator_date: `${periodYear}-${periodMonth}-01`,
+        });
+      }
+
       indicatorData[indicatorName] = {
         date: `${periodYear}-${periodMonth}-01`,
         value: dailyAverage
