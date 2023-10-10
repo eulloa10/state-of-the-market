@@ -95,7 +95,7 @@ indicatorRoute.get('/all/:period', async (req: Request, res: Response, next: Nex
          },
       });
 
-      console.log("INDICATOREXISTS: ", indicatorRecordExists)
+      // console.log("INDICATOREXISTS: ", indicatorRecordExists)
 
       if (!indicatorRecordExists) {
         await db.Indicator.create({
@@ -159,9 +159,9 @@ indicatorRoute.get('/:period', async (req: Request, res: Response, next: NextFun
   }
 });
 
-indicatorRoute.get('/period/:yearMonth', async (req: Request, res: Response) => {
+indicatorRoute.get('/period/:period', async (req: Request, res: Response) => {
   const indicatorName = parseIndicatorName(req.baseUrl);
-  const [periodYear, periodMonth] = req.params.yearMonth.split('-')
+  const [periodYear, periodMonth] = req.params.period.split('-')
   const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);
 
   try {

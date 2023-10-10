@@ -13,7 +13,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
 
     static associate(models: any) {
       Indicator.hasMany(models.Report, {
-        foreignKey: 'indicator_id'
+        foreignKey: 'indicator_data_id'
       })
 
       Indicator.belongsTo(models.Indicator_Reference, {

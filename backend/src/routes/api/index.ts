@@ -1,5 +1,6 @@
 import express from 'express';
 import { indicatorRoute } from './indicator';
+import { reportRoute } from './report';
 import morgan from 'morgan';
 import validateIndicator from '../middleware/indicatorValidation';
 
@@ -8,3 +9,4 @@ apiRoutes.use(morgan('dev'));
 
 apiRoutes.use('/indicator/:indicatorRoute', validateIndicator, indicatorRoute);
 apiRoutes.use('/indicators', indicatorRoute);
+apiRoutes.use('/reports', reportRoute);
