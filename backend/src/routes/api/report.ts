@@ -13,20 +13,17 @@ import db from '../../db/models';
 import {
   Op
 } from "sequelize";
+import formatReportData from '../../utils/formatReportData';
 
 dotenv.config();
 
 export const reportRouter = express.Router();
-
-
 
 reportRouter.get('/', async (req: Request, res: Response) => {
   const now = new Date();
   const reportYear = now.getFullYear();
   const reportMonth = now.getMonth() + 1;
   const reportDay = now.getDate();
-
-  const reportData: ReportData = {};
 
   const indicatorData = await db.Report.findAll({
     where: {
@@ -35,41 +32,9 @@ reportRouter.get('/', async (req: Request, res: Response) => {
     include: db.Indicator
   })
 
-  for (let data of indicatorData) {
-    let indicatorId = data.dataValues.Indicator.indicator_reference_id;
-    let indicatorValue = data.dataValues.Indicator.indicator_value;
-    let indicatorDate = data.dataValues.Indicator.indicator_date;
+  const reportData = formatReportData(indicatorData);
 
-    if (!reportData[indicatorId]) {
-      reportData[indicatorId] = {
-        prior: {
-          indicatorDate: '',
-          indicatorValue: '',
-        },
-        recent: {
-          indicatorDate,
-          indicatorValue
-        },
-      };
-    } else {
-      let date1 = Date.parse(indicatorDate);
-      let date2 = Date.parse(reportData[indicatorId].recent.indicatorDate);
-
-      if (date1 > date2) {
-        reportData[indicatorId].prior = {
-          indicatorDate: reportData[indicatorId].recent.indicatorDate,
-          indicatorValue: reportData[indicatorId].recent.indicatorValue,
-        };
-
-        // Update "recent" with the new data
-        reportData[indicatorId].recent.indicatorDate = indicatorDate;
-        reportData[indicatorId].recent.indicatorValue = indicatorValue;
-      } else {
-        reportData[indicatorId].prior.indicatorDate = indicatorDate;
-        reportData[indicatorId].prior.indicatorValue = indicatorValue;
-      }
-    }
-  }
+  // TODO: Convert data to xlsx and then save it to S3 AWS bucket
   res.json(reportData);
 })
 
