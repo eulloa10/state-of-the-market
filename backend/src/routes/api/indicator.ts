@@ -95,8 +95,6 @@ indicatorRoute.get('/all/:period', async (req: Request, res: Response, next: Nex
          },
       });
 
-      // console.log("INDICATOREXISTS: ", indicatorRecordExists)
-
       if (!indicatorRecordExists) {
         await db.Indicator.create({
           indicator_reference_id: reference.id,
