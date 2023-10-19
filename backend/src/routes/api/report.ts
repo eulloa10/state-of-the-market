@@ -46,7 +46,7 @@ reportRoute.post('/', async (req: Request, res: Response) => {
     }
 
     res.status(201).json({
-      message: "Table created successfully", newRecords
+      message: "Report records created successfully", newRecords
     })
   } catch (e) {
     console.error(e);
