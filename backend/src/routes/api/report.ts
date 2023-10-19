@@ -4,11 +4,6 @@ import express, {
   Response
 } from 'express';
 import * as dotenv from 'dotenv';
-import indicatorReference from '../../data/indicatorReference.json';
-import {
-  Indicators,
-  ReportData
-} from '../../types/interfaces';
 import db from '../../db/models';
 import {
   Op
