@@ -15,7 +15,8 @@ dotenv.config();
 
 export const reportRoute = express.Router();
 
-// Change to POST route
+// Add error handling in the event that the recent and prior data
+// does not exist yet
 reportRoute.post('/', async (req: Request, res: Response) => {
   const todayStart = new Date().setHours(0, 0, 0, 0);
   const now = new Date();
@@ -23,9 +24,6 @@ reportRoute.post('/', async (req: Request, res: Response) => {
   const reportMonth = now.getMonth() + 1;
   const reportDay = now.getDate();
 
-  // console.log("TODAY_START", todayStart)
-  // console.log("NOW", now)
-  // console.log(reportYear, " ", reportMonth, " ", reportDay)
   let newRecords = []
 
   try {
@@ -48,7 +46,7 @@ reportRoute.post('/', async (req: Request, res: Response) => {
     }
 
     res.status(201).json({
-      message: "Records created successfully", newRecords
+      message: "Table created successfully", newRecords
     })
   } catch (e) {
     console.error(e);
