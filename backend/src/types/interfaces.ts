@@ -11,3 +11,16 @@ export interface FREDDataPoint {
   date: string,
   value: number
 }
+
+export interface ReportData {
+  [key: number]: {
+    prior: {
+      indicatorDate: string,
+      indicatorValue: string
+    },
+    recent: {
+      indicatorDate: string,
+      indicatorValue: string
+    }
+  }
+}
