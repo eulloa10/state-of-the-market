@@ -9,6 +9,7 @@ import {
   Op
 } from "sequelize";
 import formatReportData from '../../utils/formatReportData';
+import createExcelReport from '../../utils/createExcelReport';
 
 dotenv.config();
 
@@ -29,6 +30,9 @@ reportRouter.get('/', async (req: Request, res: Response) => {
 
   const reportData = formatReportData(indicatorData);
 
+  // console.log("REPORT DATA: ", reportData)
+  const excelReport = await createExcelReport(reportData)
+  console.log("EXCELREPORT: ", excelReport)
   // TODO: Convert data to xlsx and then save it to S3 AWS bucket
   res.json(reportData);
 })

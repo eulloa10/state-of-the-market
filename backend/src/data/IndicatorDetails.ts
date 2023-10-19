@@ -1,4 +1,4 @@
-const indicators = {
+export const indicators = {
   1 : {
       'full_name': 'Yield Curve',
       'abbr_name': 'Yield Curve',
