@@ -5,6 +5,10 @@ import {
 import db from '../db/models';
 
 export default async function createExcelReport(reportData: ReportData) {
+  let date = new Date();
+  let month = date.toLocaleString('default', { month: 'short' })
+  let year = date.getFullYear();
+
   const workbook = new ExcelJS.Workbook();
   workbook.creator = 'State of the Market';
   workbook.created = new Date();
@@ -22,23 +26,48 @@ export default async function createExcelReport(reportData: ReportData) {
     },
     {
       header: 'Current Period',
-      key: 'currentPeriod'
+      key: 'currentPeriod',
+      style: {
+        alignment: {
+          horizontal: 'center'
+        }
+      }
     },
     {
       header: 'Prior Period',
-      key: 'priorPeriod'
+      key: 'priorPeriod',
+      style: {
+        alignment: {
+          horizontal: 'center'
+        }
+      }
     },
     {
       header: 'CP Value',
       key: 'cpValue',
+      style: {
+        alignment: {
+          horizontal: 'center'
+        }
+      }
     },
     {
       header: 'PP Value',
-      key: 'ppValue'
+      key: 'ppValue',
+      style: {
+        alignment: {
+          horizontal: 'center'
+        }
+      }
     },
     {
       header: 'Delta',
-      key: 'delta'
+      key: 'delta',
+      style: {
+        alignment: {
+          horizontal: 'center'
+        }
+      }
     },
   ];
 
@@ -60,11 +89,17 @@ export default async function createExcelReport(reportData: ReportData) {
       delta: change
     });
 
+    summarySheet.getRow(Number(indicator) + 1).alignment = {
+      horizontal: 'left'
+    }
+
     index++;
   }
 
+
+
   let newWorkbook = workbook.xlsx
-   .writeFile('econIndicators.xlsx')
+   .writeFile(`State of the Market Report - ${month} ${year}.xlsx`)
 
   return workbook;
 }
