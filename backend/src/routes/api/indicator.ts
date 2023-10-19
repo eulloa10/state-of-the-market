@@ -20,7 +20,7 @@ import parseIndicatorName from '../../utils/parseIndicatorName';
 
 dotenv.config();
 
-export const indicatorRoute = express.Router();
+export const indicatorRouter = express.Router();
 
 const indicators: Indicators = indicatorReference;
 
@@ -31,7 +31,7 @@ type IndicatorData = {
   };
 };
 
-indicatorRoute.get('/', async (req: Request, res: Response) => {
+indicatorRouter.get('/', async (req: Request, res: Response) => {
   const indicatorName = parseIndicatorName(req.baseUrl);
 
   try {
@@ -52,7 +52,7 @@ indicatorRoute.get('/', async (req: Request, res: Response) => {
   }
 });
 
-indicatorRoute.get('/all/:period', async (req: Request, res: Response, next: NextFunction) => {
+indicatorRouter.get('/all/:period', async (req: Request, res: Response, next: NextFunction) => {
   const indicatorNames = Object.keys(indicatorReference);
   const indicatorData: IndicatorData = {};
 
@@ -115,7 +115,7 @@ indicatorRoute.get('/all/:period', async (req: Request, res: Response, next: Nex
   res.json(indicatorData);
 });
 
-indicatorRoute.get('/:period', async (req: Request, res: Response, next: NextFunction) => {
+indicatorRouter.get('/:period', async (req: Request, res: Response, next: NextFunction) => {
   const indicatorName = parseIndicatorName(req.baseUrl);
   let periodYear;
   let periodMonth;
@@ -157,7 +157,7 @@ indicatorRoute.get('/:period', async (req: Request, res: Response, next: NextFun
   }
 });
 
-indicatorRoute.get('/period/:period', async (req: Request, res: Response) => {
+indicatorRouter.get('/period/:period', async (req: Request, res: Response) => {
   const indicatorName = parseIndicatorName(req.baseUrl);
   const [periodYear, periodMonth] = req.params.period.split('-')
   const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);

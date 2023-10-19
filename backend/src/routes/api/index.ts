@@ -1,12 +1,12 @@
 import express from 'express';
-import { indicatorRoute } from './indicator';
-import { reportRoute } from './report';
+import { indicatorRouter } from './indicator';
+import { reportRouter } from './report';
 import morgan from 'morgan';
 import validateIndicator from '../middleware/indicatorValidation';
 
 export const apiRoutes = express.Router();
 apiRoutes.use(morgan('dev'));
 
-apiRoutes.use('/indicator/:indicatorRoute', validateIndicator, indicatorRoute);
-apiRoutes.use('/indicators', indicatorRoute);
-apiRoutes.use('/reports', reportRoute);
+apiRoutes.use('/indicator/:indicatorRouter', validateIndicator, indicatorRouter);
+apiRoutes.use('/indicators', indicatorRouter);
+apiRoutes.use('/reports', reportRouter);

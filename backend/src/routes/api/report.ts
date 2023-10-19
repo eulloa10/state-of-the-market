@@ -13,11 +13,30 @@ import { Op } from "sequelize";
 
 dotenv.config();
 
-export const reportRoute = express.Router();
+export const reportRouter = express.Router();
+
+reportRouter.get('/', async (req: Request, res: Response) => {
+  const now = new Date();
+  const reportYear = now.getFullYear();
+  const reportMonth = now.getMonth() + 1;
+  const reportDay = now.getDate();
+
+  const indicatorData = await db.Report.findAll({
+    where: {
+      report_name: `${reportYear}-${reportMonth}-${reportDay} Monthly Report`
+    },
+    include: db.Indicator
+  })
+
+  console.log("INDICATOR DATA: ", indicatorData[0].dataValues.Indicator)
+  res.json({
+    "TEST": "THIS"
+  })
+})
 
 // Add error handling in the event that the recent and prior data
 // does not exist yet
-reportRoute.post('/', async (req: Request, res: Response) => {
+reportRouter.post('/', async (req: Request, res: Response) => {
   const todayStart = new Date().setHours(0, 0, 0, 0);
   const now = new Date();
   const reportYear = now.getFullYear();
