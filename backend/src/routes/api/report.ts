@@ -15,36 +15,36 @@ dotenv.config();
 
 export const reportRouter = express.Router();
 
-reportRouter.get('/', async (req: Request, res: Response) => {
+reportRouter.get('/monthly', async (req: Request, res: Response) => {
   const now = new Date();
   const reportYear = now.getFullYear();
   const reportMonth = now.getMonth() + 1;
-  const reportDay = now.getDate();
+  const reportDay = '01'
 
   const indicatorData = await db.Report.findAll({
     where: {
-      report_name: `${reportYear}-${reportMonth}-${19} Monthly Report`
+      report_name: `${reportYear}-${reportMonth}-${reportDay} Monthly Report`
     },
     include: db.Indicator
   })
 
   const reportData = formatReportData(indicatorData);
-  console.log("REPORT DATA CHECK", reportData)
-  // console.log("REPORT DATA: ", reportData)
   const excelReport = await createExcelReport(reportData)
-  // console.log("EXCELREPORT: ", excelReport)
+
   // TODO: Convert data to xlsx and then save it to S3 AWS bucket
   res.json(reportData);
 })
 
-// Add error handling in the event that the recent and prior data
+// TODO: Add error handling in the event that the recent and prior data
 // does not exist yet
-reportRouter.post('/', async (req: Request, res: Response) => {
+reportRouter.post('/monthly', async (req: Request, res: Response) => {
   const todayStart = new Date().setHours(0, 0, 0, 0);
   const now = new Date();
   const reportYear = now.getFullYear();
   const reportMonth = now.getMonth() + 1;
-  const reportDay = now.getDate();
+  const reportDay = '01';
+  const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+  const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
   let newRecords = []
 
@@ -52,8 +52,7 @@ reportRouter.post('/', async (req: Request, res: Response) => {
     const indicators = await db.Indicator.findAll({
       where: {
         createdAt: {
-          [Op.gt]: todayStart,
-          [Op.lt]: now
+          [Op.between]: [startDate, endDate]
         },
       }
     })

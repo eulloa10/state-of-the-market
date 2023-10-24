@@ -91,7 +91,7 @@ indicatorRouter.get('/all/:period', async (req: Request, res: Response, next: Ne
       const indicatorRecordExists = await db.Indicator.findOne({
         where: {
           indicator_value: dailyAverage,
-          indicator_date: `${periodYear}-${periodMonth}-01`
+          indicator_date: `${periodYear}-${periodMonth}-01`,
          },
       });
 

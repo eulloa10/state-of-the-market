@@ -102,7 +102,7 @@ export default async function createExcelReport(reportData: ReportData) {
     const indicatorReferenceData = await db.Indicator_Reference.findByPk(indicator);
     const indicatorName = indicatorReferenceData.dataValues.abbr_name;
     const indicatorDescription = indicatorReferenceData.dataValues.description;
-    console.log("INDICATORREFERENCeDATA: ", indicatorReferenceData)
+
     summarySheet.addRow({
       id: indicator,
       indicator: indicatorName,
