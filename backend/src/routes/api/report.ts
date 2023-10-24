@@ -23,16 +23,16 @@ reportRouter.get('/', async (req: Request, res: Response) => {
 
   const indicatorData = await db.Report.findAll({
     where: {
-      report_name: `${reportYear}-${reportMonth}-${reportDay} Monthly Report`
+      report_name: `${reportYear}-${reportMonth}-${19} Monthly Report`
     },
     include: db.Indicator
   })
 
   const reportData = formatReportData(indicatorData);
-
+  console.log("REPORT DATA CHECK", reportData)
   // console.log("REPORT DATA: ", reportData)
   const excelReport = await createExcelReport(reportData)
-  console.log("EXCELREPORT: ", excelReport)
+  // console.log("EXCELREPORT: ", excelReport)
   // TODO: Convert data to xlsx and then save it to S3 AWS bucket
   res.json(reportData);
 })

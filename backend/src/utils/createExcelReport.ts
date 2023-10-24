@@ -6,7 +6,9 @@ import db from '../db/models';
 
 export default async function createExcelReport(reportData: ReportData) {
   let date = new Date();
-  let month = date.toLocaleString('default', { month: 'short' })
+  let month = date.toLocaleString('default', {
+    month: 'short'
+  })
   let year = date.getFullYear();
 
   const workbook = new ExcelJS.Workbook();
@@ -71,14 +73,36 @@ export default async function createExcelReport(reportData: ReportData) {
     },
   ];
 
-  let index = 0;
+  const indicatorDescriptionSheet = workbook.addWorksheet('Indicator Descriptions');
 
+  indicatorDescriptionSheet.columns = [{
+      header: 'Indicator',
+      key: 'indicator',
+      style: {
+        alignment: {
+          horizontal: 'center'
+        }
+      }
+    },
+    {
+      header: 'Description',
+      key: 'description',
+      style: {
+        alignment: {
+          horizontal: 'center'
+        }
+      }
+    },
+  ];
+
+  let index = 0;
   for (let indicator in reportData) {
     const change = (Number(reportData[indicator].recent.indicatorValue) - Number(reportData[indicator].prior.indicatorValue)) / Number(reportData[indicator].prior.indicatorValue);
 
     const indicatorReferenceData = await db.Indicator_Reference.findByPk(indicator);
-    const indicatorName = indicatorReferenceData.dataValues.abbr_name
-
+    const indicatorName = indicatorReferenceData.dataValues.abbr_name;
+    const indicatorDescription = indicatorReferenceData.dataValues.description;
+    console.log("INDICATORREFERENCeDATA: ", indicatorReferenceData)
     summarySheet.addRow({
       id: indicator,
       indicator: indicatorName,
@@ -89,6 +113,11 @@ export default async function createExcelReport(reportData: ReportData) {
       delta: change
     });
 
+    indicatorDescriptionSheet.addRow({
+      indicator: indicatorName,
+      description: indicatorDescription
+    })
+
     summarySheet.getRow(Number(indicator) + 1).alignment = {
       horizontal: 'left'
     }
@@ -96,10 +125,8 @@ export default async function createExcelReport(reportData: ReportData) {
     index++;
   }
 
-
-
   let newWorkbook = workbook.xlsx
-   .writeFile(`State of the Market Report - ${month} ${year}.xlsx`)
+    .writeFile(`State of the Market Report - ${month} ${year}.xlsx`)
 
   return workbook;
 }
