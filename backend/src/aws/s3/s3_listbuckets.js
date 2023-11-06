@@ -1,16 +1,26 @@
-// Load the AWS SDK for Node.js
-var AWS = require('aws-sdk');
-// Set the region
-AWS.config.update({region: 'us-west-2'});
+import { ListBucketsCommand, S3Client } from "@aws-sdk/client-s3";
+import dotenv from 'dotenv';
 
-// Create S3 service object
-s3 = new AWS.S3({apiVersion: '2006-03-01'});
+dotenv.config({path: '../../../.env'});
 
-// Call S3 to list the buckets
-s3.listBuckets(function(err, data) {
-  if (err) {
-    console.log("Error", err);
-  } else {
-    console.log("Success", data.Buckets);
-  }
+const client = new S3Client({
+  region: 'us-west-1',
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
 });
+
+export const main = async () => {
+  const command = new ListBucketsCommand({});
+
+  try {
+    const { Owner, Buckets } = await client.send(command);
+    console.log(
+      `${Owner.DisplayName} owns ${Buckets.length} bucket${
+        Buckets.length === 1 ? "" : "s"
+      }:`,
+    );
+    console.log(`${Buckets.map((b) => ` • ${b.Name}`).join("\n")}`);
+  } catch (err) {
+    console.error(err);
+  }
+};

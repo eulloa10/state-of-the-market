@@ -12,7 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.435.0",
+    "@aws-sdk/client-s3": "^3.441.0",
     "aws-sdk": "^2.1480.0",
     "axios": "^1.4.0",
     "dotenv": "^16.3.1",
@@ -31,5 +31,6 @@
     "@types/validator": "^13.11.1",
     "sequelize-cli": "^6.6.1",
     "typescript": "^5.1.6"
-  }
+  },
+  "type": "module"
 }
