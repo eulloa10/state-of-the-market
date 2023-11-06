@@ -3,6 +3,7 @@ import {
   ReportData
 } from "../types/interfaces";
 import db from '../db/models';
+import { uploadToBucket } from '../aws/s3/s3_uploadtobucket';
 
 export default async function createExcelReport(reportData: ReportData) {
   let date = new Date();
@@ -125,8 +126,11 @@ export default async function createExcelReport(reportData: ReportData) {
     index++;
   }
 
-  let newWorkbook = workbook.xlsx
-    .writeFile(`State of the Market Report - ${month} ${year}.xlsx`)
+  let excelReportName =  `State of the Market Report - ${month} ${year}.xlsx`;
+
+  const buffer = await workbook.xlsx.writeBuffer();
+
+  await uploadToBucket(excelReportName, buffer);
 
   return workbook;
 }

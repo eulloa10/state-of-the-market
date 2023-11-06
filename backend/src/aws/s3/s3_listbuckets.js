@@ -9,7 +9,7 @@ const client = new S3Client({
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
 });
 
-export const main = async () => {
+export const listBuckets = async () => {
   const command = new ListBucketsCommand({});
 
   try {
