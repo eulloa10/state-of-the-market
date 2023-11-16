@@ -53,22 +53,22 @@ export default async function createExcelReport(reportData: ReportData) {
       key: 'cpValue',
       style: {
         alignment: {
-          horizontal: 'center'
+          horizontal: 'right'
         },
         numFmt: '#,##0.00'
       },
-      width: 9
+      width: 10
     },
     {
       header: 'PP Value',
       key: 'ppValue',
       style: {
         alignment: {
-          horizontal: 'center'
+          horizontal: 'right'
         },
         numFmt: '#,##0.00'
       },
-      width: 9
+      width: 10
     },
     {
       header: 'Delta',
