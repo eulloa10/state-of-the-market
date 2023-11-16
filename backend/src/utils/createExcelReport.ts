@@ -29,7 +29,7 @@ export default async function createExcelReport(reportData: ReportData) {
       width: 35
     },
     {
-      header: 'Current Period',
+      header: 'Current Period (CP)',
       key: 'currentPeriod',
       style: {
         alignment: {
@@ -37,10 +37,10 @@ export default async function createExcelReport(reportData: ReportData) {
         },
         numFmt: 'mmm yyyy'
       },
-      width: 13
+      width: 16
     },
     {
-      header: 'Prior Period',
+      header: 'Prior Period (PP)',
       key: 'priorPeriod',
       style: {
         alignment: {
@@ -48,7 +48,7 @@ export default async function createExcelReport(reportData: ReportData) {
         },
         numFmt: 'mmm yyyy'
       },
-      width: 13
+      width: 16
     },
     {
       header: 'CP Value',
