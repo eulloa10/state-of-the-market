@@ -34,7 +34,8 @@ export default async function createExcelReport(reportData: ReportData) {
       style: {
         alignment: {
           horizontal: 'center'
-        }
+        },
+        numFmt: 'mmm yyyy'
       },
       width: 12
     },
@@ -44,7 +45,8 @@ export default async function createExcelReport(reportData: ReportData) {
       style: {
         alignment: {
           horizontal: 'center'
-        }
+        },
+        numFmt: 'mmm yyyy'
       },
       width: 12
     },
@@ -75,7 +77,7 @@ export default async function createExcelReport(reportData: ReportData) {
       key: 'delta',
       style: {
         alignment: {
-          horizontal: 'center'
+          horizontal: 'right'
         },
         numFmt: '0.00%'
       },
@@ -114,12 +116,14 @@ export default async function createExcelReport(reportData: ReportData) {
     const indicatorReferenceData = await db.Indicator_Reference.findByPk(indicator);
     const indicatorName = indicatorReferenceData.dataValues.abbr_name;
     const indicatorDescription = indicatorReferenceData.dataValues.description;
+    const recentIndicatorDate = new Date(reportData[indicator].recent.indicatorDate)
+    const priorIndicatorDate = new Date(reportData[indicator].prior.indicatorDate)
 
     summarySheet.addRow({
       id: indicator,
       indicator: indicatorName,
-      currentPeriod: reportData[indicator].recent.indicatorDate,
-      priorPeriod: reportData[indicator].prior.indicatorDate,
+      currentPeriod: recentIndicatorDate,
+      priorPeriod: priorIndicatorDate,
       cpValue: reportData[indicator].recent.indicatorValue,
       ppValue: reportData[indicator].prior.indicatorValue,
       delta: change
@@ -130,13 +134,17 @@ export default async function createExcelReport(reportData: ReportData) {
       description: indicatorDescription
     })
 
-    summarySheet.getRow(Number(indicator) + 1).alignment = {
-      horizontal: 'center',
-    }
+    // summarySheet.getRow(Number(indicator) + 1).alignment = {
+    //   horizontal: 'left',
+    // }
 
     // summarySheet.getRow(Number(indicator) + 1).numFmt = '#,##0.00';
 
     index++;
+  }
+
+  summarySheet.getRow(1).alignment = {
+    horizontal: 'center',
   }
 
   let excelReportName =  `State of the Market Report - ${month} ${year}.xlsx`;
