@@ -23,7 +23,7 @@ export default async function createExcelReport(reportData: ReportData) {
       key: 'indicator',
       style: {
         alignment: {
-          horizontal: 'center'
+          horizontal: 'left'
         }
       },
       width: 35
@@ -37,7 +37,7 @@ export default async function createExcelReport(reportData: ReportData) {
         },
         numFmt: 'mmm yyyy'
       },
-      width: 12
+      width: 13
     },
     {
       header: 'Prior Period',
@@ -48,7 +48,7 @@ export default async function createExcelReport(reportData: ReportData) {
         },
         numFmt: 'mmm yyyy'
       },
-      width: 12
+      width: 13
     },
     {
       header: 'CP Value',
@@ -92,7 +92,8 @@ export default async function createExcelReport(reportData: ReportData) {
       key: 'indicator',
       style: {
         alignment: {
-          horizontal: 'center'
+          horizontal: 'left',
+          vertical: 'middle'
         }
       },
       width: 30
@@ -102,9 +103,12 @@ export default async function createExcelReport(reportData: ReportData) {
       key: 'description',
       style: {
         alignment: {
-          horizontal: 'center'
+          horizontal: 'left',
+          vertical: 'middle',
+          wrapText: true
         }
-      }
+      },
+      width: 100
     },
   ];
 
@@ -144,6 +148,10 @@ export default async function createExcelReport(reportData: ReportData) {
   }
 
   summarySheet.getRow(1).alignment = {
+    horizontal: 'center',
+  }
+
+  indicatorDescriptionSheet.getRow(1).alignment = {
     horizontal: 'center',
   }
 
