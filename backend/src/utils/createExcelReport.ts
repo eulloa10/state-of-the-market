@@ -25,7 +25,8 @@ export default async function createExcelReport(reportData: ReportData) {
         alignment: {
           horizontal: 'center'
         }
-      }
+      },
+      width: 35
     },
     {
       header: 'Current Period',
@@ -34,7 +35,8 @@ export default async function createExcelReport(reportData: ReportData) {
         alignment: {
           horizontal: 'center'
         }
-      }
+      },
+      width: 12
     },
     {
       header: 'Prior Period',
@@ -43,7 +45,8 @@ export default async function createExcelReport(reportData: ReportData) {
         alignment: {
           horizontal: 'center'
         }
-      }
+      },
+      width: 12
     },
     {
       header: 'CP Value',
@@ -51,8 +54,10 @@ export default async function createExcelReport(reportData: ReportData) {
       style: {
         alignment: {
           horizontal: 'center'
-        }
-      }
+        },
+        numFmt: '#,##0.00'
+      },
+      width: 9
     },
     {
       header: 'PP Value',
@@ -60,8 +65,10 @@ export default async function createExcelReport(reportData: ReportData) {
       style: {
         alignment: {
           horizontal: 'center'
-        }
-      }
+        },
+        numFmt: '#,##0.00'
+      },
+      width: 9
     },
     {
       header: 'Delta',
@@ -69,8 +76,10 @@ export default async function createExcelReport(reportData: ReportData) {
       style: {
         alignment: {
           horizontal: 'center'
-        }
-      }
+        },
+        numFmt: '0.00%'
+      },
+      width: 9
     },
   ];
 
@@ -83,7 +92,8 @@ export default async function createExcelReport(reportData: ReportData) {
         alignment: {
           horizontal: 'center'
         }
-      }
+      },
+      width: 30
     },
     {
       header: 'Description',
@@ -95,6 +105,7 @@ export default async function createExcelReport(reportData: ReportData) {
       }
     },
   ];
+
 
   let index = 0;
   for (let indicator in reportData) {
@@ -120,19 +131,22 @@ export default async function createExcelReport(reportData: ReportData) {
     })
 
     summarySheet.getRow(Number(indicator) + 1).alignment = {
-      horizontal: 'left'
+      horizontal: 'center',
     }
+
+    // summarySheet.getRow(Number(indicator) + 1).numFmt = '#,##0.00';
 
     index++;
   }
 
   let excelReportName =  `State of the Market Report - ${month} ${year}.xlsx`;
 
-  const buffer = await workbook.xlsx.writeBuffer();
+  // const buffer = await workbook.xlsx.writeBuffer();
+  // console.log(buffer);
+  await workbook.xlsx.writeFile(excelReportName)
 
-  console.log(buffer);
 
-  await uploadToBucket(excelReportName, buffer);
+  // await uploadToBucket(excelReportName, buffer);
 
-  return buffer;
+  // return buffer;
 }
