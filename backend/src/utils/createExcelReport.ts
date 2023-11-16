@@ -138,12 +138,6 @@ export default async function createExcelReport(reportData: ReportData) {
       description: indicatorDescription
     })
 
-    // summarySheet.getRow(Number(indicator) + 1).alignment = {
-    //   horizontal: 'left',
-    // }
-
-    // summarySheet.getRow(Number(indicator) + 1).numFmt = '#,##0.00';
-
     index++;
   }
 
@@ -157,12 +151,11 @@ export default async function createExcelReport(reportData: ReportData) {
 
   let excelReportName =  `State of the Market Report - ${month} ${year}.xlsx`;
 
-  // const buffer = await workbook.xlsx.writeBuffer();
-  // console.log(buffer);
-  await workbook.xlsx.writeFile(excelReportName)
+  const buffer = await workbook.xlsx.writeBuffer();
+  console.log(buffer);
+  // await workbook.xlsx.writeFile(excelReportName)
 
+  await uploadToBucket(excelReportName, buffer);
 
-  // await uploadToBucket(excelReportName, buffer);
-
-  // return buffer;
+  return buffer;
 }
