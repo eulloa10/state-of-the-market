@@ -36,7 +36,7 @@ module.exports = {
     await queryInterface.addConstraint('Indicators', {
       type: 'unique',
       name: 'indicatorValueDateCompositeKey',
-      fields: ['indicator_value', 'indicator_date'],
+      fields: ['indicator_value', 'createdAt'],
     });
   },
   async down(queryInterface, Sequelize) {

@@ -33,6 +33,22 @@ indicatorRouter.get('/all/latest', async (req: Request, res: Response, next: Nex
 
     for (const indicator of indicatorNames) {
       const latestData: CalculatedIndicatorData = await fetchLatestIndicatorData(indicator);
+      const transaction = await db.sequelize.transaction();
+
+      try {
+        const reference = await db.Indicator_Reference.findOne({
+          where: { series_id: indicators[indicator].seriesId },
+        });
+        await db.Indicator.create({
+          indicator_reference_id: reference.id,
+          indicator_value: latestData.value,
+          indicator_date: latestData.date,
+        });
+        await transaction.commit();
+      } catch (e) {
+        console.error('Transaction failed:', e);
+        await transaction.rollback();
+      }
       indicatorData[indicator] = latestData;
     }
     res.json(indicatorData)
@@ -116,23 +132,6 @@ indicatorRouter.get('/:indicator/:period', validateIndicatorParam, validatePerio
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: 'An error occurred while processing the request' });
-  }
-});
-
-// Latest data point for all indicators
-indicatorRouter.get('/all/latest', async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const indicatorNames = Object.keys(indicatorReference);
-    const indicatorData: IndicatorData = {};
-
-    for (const indicator of indicatorNames) {
-      const latestData: CalculatedIndicatorData = await fetchLatestIndicatorData(indicator);
-      indicatorData[indicator] = latestData;
-    }
-    res.json(indicatorData)
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: 'An error occurred while fetching the latest indicator data for all indicators' });
   }
 });
 
