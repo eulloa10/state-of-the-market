@@ -24,3 +24,8 @@ export interface ReportData {
     }
   }
 }
+
+export interface CalculatedIndicatorData {
+  date: string;
+  value: string;
+}
