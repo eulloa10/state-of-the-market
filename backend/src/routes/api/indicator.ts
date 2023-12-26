@@ -69,11 +69,11 @@ indicatorRouter.get('/:indicator/latest', validateIndicatorParam, async (req: Re
 indicatorRouter.get('/:indicator/prior', validateIndicatorParam, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { indicator } = req.params;
-    const latestData: CalculatedIndicatorData = await fetchLatestIndicatorData(indicator);
-    res.json(latestData)
+    const priorPeriodData: CalculatedIndicatorData = await fetchLatestIndicatorData(indicator);
+    res.json(priorPeriodData)
   } catch (e) {
     console.error(e);
-    res.status(500).json({ error: 'An error occurred while fetching latest indicator data' });
+    res.status(500).json({ error: 'An error occurred while fetching prior period indicator data' });
   }
 });
 
@@ -97,13 +97,6 @@ indicatorRouter.get('/:indicator/:period', validateIndicatorParam, validatePerio
     res.status(500).json({ error: 'An error occurred while processing the request' });
   }
 });
-
-
-
-// GET the prior period data point for an indicator
-// indicatorRouter.get('/:indicator/prior', validateIndicatorParam, async (req: Request, res: Response, next: NextFunction) => {
-
-// });
 
 // GET most recent or prior data value for a given indicator
 // indicatorRouter.get('/:indicator/:period', validateIndicatorParam, async (req: Request, res: Response, next: NextFunction) => {
