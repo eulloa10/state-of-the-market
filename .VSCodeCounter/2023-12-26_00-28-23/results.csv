@@ -1,0 +1,60 @@
+"filename", "language", "TypeScript", "JavaScript", "JSON", "JSON with Comments", "TypeScript JSX", "CSS", "XML", "Markdown", "comment", "blank", "total"
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/package.json", "JSON", 0, 0, 35, 0, 0, 0, 0, 0, 0, 1, 36
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/app.ts", "TypeScript", 12, 0, 0, 0, 0, 0, 0, 0, 3, 6, 21
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/aws/s3/s3_getobject.js", "JavaScript", 0, 21, 0, 0, 0, 0, 0, 0, 1, 5, 27
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/aws/s3/s3_listbuckets.js", "JavaScript", 0, 22, 0, 0, 0, 0, 0, 0, 0, 5, 27
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/aws/s3/s3_uploadtobucket.js", "JavaScript", 0, 22, 0, 0, 0, 0, 0, 0, 0, 5, 27
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/constants.ts", "TypeScript", 3, 0, 0, 0, 0, 0, 0, 0, 3, 3, 9
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/data/IndicatorDetails.ts", "TypeScript", 68, 0, 0, 0, 0, 0, 0, 0, 0, 1, 69
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/data/indicatorReference.json", "JSON", 0, 0, 46, 0, 0, 0, 0, 0, 0, 1, 47
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/db/config/config.js", "JavaScript", 0, 24, 0, 0, 0, 0, 0, 0, 0, 2, 26
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/db/migrations/20230907063424-create-user.js", "JavaScript", 0, 40, 0, 0, 0, 0, 0, 0, 1, 1, 42
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/db/migrations/20230907071328-create-report.js", "JavaScript", 0, 38, 0, 0, 0, 0, 0, 0, 1, 1, 40
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/db/migrations/20230907204112-create-indicator.js", "JavaScript", 0, 44, 0, 0, 0, 0, 0, 0, 1, 2, 47
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/db/migrations/20230907210022-create-indicator-reference.js", "JavaScript", 0, 42, 0, 0, 0, 0, 0, 0, 1, 1, 44
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/db/models/index.ts", "TypeScript", 36, 0, 0, 0, 0, 0, 0, 0, 1, 7, 44
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/db/models/indicator.ts", "TypeScript", 45, 0, 0, 0, 0, 0, 0, 0, 0, 6, 51
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/db/models/indicator_reference.ts", "TypeScript", 46, 0, 0, 0, 0, 0, 0, 0, 0, 4, 50
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/db/models/report.ts", "TypeScript", 46, 0, 0, 0, 0, 0, 0, 0, 0, 5, 51
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/db/models/user.ts", "TypeScript", 43, 0, 0, 0, 0, 0, 0, 0, 0, 5, 48
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/db/seeders/20230907212613-indicator_reference_data.js", "JavaScript", 0, 75, 0, 0, 0, 0, 0, 0, 16, 3, 94
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/routes/api/index.ts", "TypeScript", 9, 0, 0, 0, 0, 0, 0, 0, 1, 3, 13
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/routes/api/indicator.ts", "TypeScript", 138, 0, 0, 0, 0, 0, 0, 0, 5, 22, 165
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/routes/api/report.ts", "TypeScript", 71, 0, 0, 0, 0, 0, 0, 0, 4, 12, 87
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/routes/api/smtpserver.ts", "TypeScript", 34, 0, 0, 0, 0, 0, 0, 0, 13, 13, 60
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/routes/index.ts", "TypeScript", 15, 0, 0, 0, 0, 0, 0, 0, 0, 3, 18
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/routes/middleware/queryPriorIndicatorData.ts", "TypeScript", 33, 0, 0, 0, 0, 0, 0, 0, 0, 4, 37
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/routes/middleware/queryRecentIndicatorData.ts", "TypeScript", 34, 0, 0, 0, 0, 0, 0, 0, 0, 4, 38
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/routes/middleware/querySelectedIndicatorData.ts", "TypeScript", 36, 0, 0, 0, 0, 0, 0, 0, 0, 4, 40
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/routes/middleware/validateIndicatorParam.ts", "TypeScript", 17, 0, 0, 0, 0, 0, 0, 0, 0, 2, 19
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/routes/middleware/validatePeriodParam.ts", "TypeScript", 18, 0, 0, 0, 0, 0, 0, 0, 0, 2, 20
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/types/express/index.d.ts", "TypeScript", 8, 0, 0, 0, 0, 0, 0, 0, 0, 2, 10
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/types/interfaces.ts", "TypeScript", 28, 0, 0, 0, 0, 0, 0, 0, 0, 4, 32
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/utils/calcAvgIndicatorValue.ts", "TypeScript", 17, 0, 0, 0, 0, 0, 0, 0, 0, 7, 24
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/utils/createExcelReport.ts", "TypeScript", 143, 0, 0, 0, 0, 0, 0, 0, 1, 18, 162
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/utils/extractDateFromRecord.ts", "TypeScript", 7, 0, 0, 0, 0, 0, 0, 0, 0, 1, 8
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/utils/extractPeriodInfo.ts", "TypeScript", 11, 0, 0, 0, 0, 0, 0, 0, 0, 3, 14
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/utils/fetchIndicatorData.ts", "TypeScript", 25, 0, 0, 0, 0, 0, 0, 0, 0, 4, 29
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/utils/fetchLatestIndicatorData.ts", "TypeScript", 21, 0, 0, 0, 0, 0, 0, 0, 5, 6, 32
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/utils/fetchPriorIndicatorData.ts", "TypeScript", 25, 0, 0, 0, 0, 0, 0, 0, 5, 6, 36
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/utils/formatReportData.ts", "TypeScript", 36, 0, 0, 0, 0, 0, 0, 0, 1, 6, 43
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/utils/fredDataFormatter.ts", "TypeScript", 17, 0, 0, 0, 0, 0, 0, 0, 0, 3, 20
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/utils/getIndicatorDate.ts", "TypeScript", 28, 0, 0, 0, 0, 0, 0, 0, 0, 5, 33
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/utils/getLastDayOfMonth.ts", "TypeScript", 4, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/utils/getPreviousMonthAndYear.ts", "TypeScript", 13, 0, 0, 0, 0, 0, 0, 0, 0, 4, 17
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/src/utils/parseIndicatorName.ts", "TypeScript", 5, 0, 0, 0, 0, 0, 0, 0, 0, 1, 6
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/backend/tsconfig.json", "JSON with Comments", 0, 0, 0, 18, 0, 0, 0, 0, 84, 9, 111
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/frontend/.eslintrc.json", "JSON with Comments", 0, 0, 0, 3, 0, 0, 0, 0, 0, 1, 4
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/frontend/README.md", "Markdown", 0, 0, 0, 0, 0, 0, 0, 21, 0, 14, 35
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/frontend/next.config.js", "JavaScript", 0, 2, 0, 0, 0, 0, 0, 0, 1, 2, 5
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/frontend/package-lock.json", "JSON", 0, 0, 6708, 0, 0, 0, 0, 0, 0, 1, 6709
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/frontend/package.json", "JSON", 0, 0, 25, 0, 0, 0, 0, 0, 0, 1, 26
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/frontend/postcss.config.js", "JavaScript", 0, 6, 0, 0, 0, 0, 0, 0, 0, 1, 7
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/frontend/public/next.svg", "XML", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/frontend/public/vercel.svg", "XML", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/frontend/src/app/globals.css", "CSS", 0, 0, 0, 0, 0, 24, 0, 0, 0, 4, 28
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/frontend/src/app/layout.tsx", "TypeScript JSX", 0, 0, 0, 0, 21, 0, 0, 0, 0, 4, 25
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/frontend/src/app/page.tsx", "TypeScript JSX", 0, 0, 0, 0, 4, 0, 0, 0, 0, 2, 6
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/frontend/tailwind.config.ts", "TypeScript", 19, 0, 0, 0, 0, 0, 0, 0, 0, 2, 21
+"/Users/edgarulloa/Documents/Projects/state-of-the-market/frontend/tsconfig.json", "JSON with Comments", 0, 0, 0, 27, 0, 0, 0, 0, 0, 1, 28
+"Total", "-", 1111, 336, 6814, 48, 25, 24, 2, 21, 148, 246, 8775
