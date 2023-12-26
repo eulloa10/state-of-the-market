@@ -12,8 +12,8 @@ import {
 import getLastDayOfMonth
 from '../../utils/getLastDayOfMonth';
 import
-getMostRecentIndicatorDate
-from '../../utils/getMostRecentIndicatorDate';
+getIndicatorDate
+from '../../utils/getIndicatorDate';
 import db from '../../db/models';
 import calcAvgIndicatorValue from '../../utils/calcAvgIndicatorValue';
 import parseIndicatorName from '../../utils/parseIndicatorName';
@@ -58,8 +58,7 @@ indicatorRouter.get('/:indicator/:period', validateIndicatorParam, validatePerio
     const { periodYear, periodMonth, observation_start, observation_end } = extractPeriodInfo(period);
 
     const indicatorData = await fetchIndicatorData(indicator, observation_start, observation_end);
-
-    let dailyAverage = calcAvgIndicatorValue(indicatorData);
+    const dailyAverage = calcAvgIndicatorValue(indicatorData);
 
     res.json({
       [indicator]: {
@@ -73,6 +72,49 @@ indicatorRouter.get('/:indicator/:period', validateIndicatorParam, validatePerio
   }
 });
 
+// GET latest or prior data value for a given indicator
+indicatorRouter.get('/:indicator/:period', validateIndicatorParam, async (req: Request, res: Response, next: NextFunction) => {
+  const indicatorName = parseIndicatorName(req.baseUrl);
+  let periodYear;
+  let periodMonth;
+
+  if (req.params.period === 'recent') {
+    [periodYear, periodMonth] = await getIndicatorDate(indicatorName, "recent");
+  } else if (req.params.period === 'prior') {
+    [periodYear, periodMonth] = await getIndicatorDate(indicatorName, "prior");
+  } else {
+    next();
+    return;
+  }
+
+  const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);
+
+  try {
+    const indicatorData = await axios.get(FRED_API_URL, {
+      params: {
+        observation_end: `${periodYear}-${periodMonth}-${periodLastDay}`,
+        observation_start: `${periodYear}-${periodMonth}-01`,
+        series_id: indicators[indicatorName].seriesId,
+        file_type: FILE_TYPE,
+        sort_order: SORT_ORDER,
+        api_key: process.env.FRED_API_KEY
+      }
+    })
+
+    let dailyAverage = calcAvgIndicatorValue(indicatorData.data.observations);
+
+    res.json({
+      [indicatorName]: {
+        "date": `${periodYear}-${periodMonth}-01`,
+        "value": dailyAverage
+      }
+    });
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+});
+
 // GET all recent or prior data for all indicators
 indicatorRouter.get('/:period', async (req: Request, res: Response, next: NextFunction) => {
   const indicatorNames = Object.keys(indicatorReference);
@@ -83,9 +125,9 @@ indicatorRouter.get('/:period', async (req: Request, res: Response, next: NextFu
     let periodMonth;
 
     if (req.params.period === 'recent') {
-      [periodYear, periodMonth] = await getMostRecentIndicatorDate(indicatorName, 'recent');
+      [periodYear, periodMonth] = await getIndicatorDate(indicatorName, 'recent');
     } else if (req.params.period === 'prior') {
-      [periodYear, periodMonth] = await getMostRecentIndicatorDate(indicatorName, 'prior');
+      [periodYear, periodMonth] = await getIndicatorDate(indicatorName, 'prior');
     } else {
       return res.status(400).json({ error: 'Invalid period' });
     }
@@ -144,9 +186,9 @@ indicatorRouter.get('/:period', async (req: Request, res: Response, next: NextFu
   let periodMonth;
 
   if (req.params.period === 'recent') {
-    [periodYear, periodMonth] = await getMostRecentIndicatorDate(indicatorName, "recent");
+    [periodYear, periodMonth] = await getIndicatorDate(indicatorName, "recent");
   } else if (req.params.period === 'prior') {
-    [periodYear, periodMonth] = await getMostRecentIndicatorDate(indicatorName, "prior");
+    [periodYear, periodMonth] = await getIndicatorDate(indicatorName, "prior");
   } else {
     next();
     return;

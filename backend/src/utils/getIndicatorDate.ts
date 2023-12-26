@@ -7,7 +7,7 @@ import getPreviousMonthAndYear from './getPreviousMonthAndYear';
 
 const indicators: Indicators = indicatorReference;
 
-export default async function getMostRecentIndicatorDate(indicatorName: string, period: string) {
+export default async function getIndicatorDate(indicatorName: string, period: string) {
   try {
     const indicatorData = await axios.get('https://api.stlouisfed.org/fred/series/observations', {
       params: {
