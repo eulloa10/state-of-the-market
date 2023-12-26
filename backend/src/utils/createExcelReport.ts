@@ -155,7 +155,7 @@ export default async function createExcelReport(reportData: ReportData) {
   console.log(buffer);
   // await workbook.xlsx.writeFile(excelReportName)
 
-  // await uploadToBucket(excelReportName, buffer);
+  await uploadToBucket(excelReportName, buffer);
 
   return buffer;
 }

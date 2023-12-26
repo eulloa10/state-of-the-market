@@ -17,9 +17,8 @@ from '../../utils/getMostRecentIndicatorDate';
 import db from '../../db/models';
 import calcAvgIndicatorValue from '../../utils/calcAvgIndicatorValue';
 import parseIndicatorName from '../../utils/parseIndicatorName';
-import { FRED_API_URL } from '../../constants';
-import { FILE_TYPE } from '../../constants';
-import { SORT_ORDER } from '../../constants';
+import { FRED_API_URL, FILE_TYPE, SORT_ORDER } from '../../constants';
+import fetchIndicatorData from '../../utils/fetchIndicatorData';
 
 dotenv.config();
 
@@ -36,19 +35,45 @@ type IndicatorData = {
 
 // GET all data for a given indicator
 indicatorRouter.get('/', async (req: Request, res: Response) => {
+  try {
+    const { baseUrl } = req;
+    const indicatorName = parseIndicatorName(baseUrl);
+    const indicatorData = await fetchIndicatorData(indicatorName);
+
+    res.json({
+      [indicatorName]: indicatorData,
+    });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'An error occurred while fetching indicator data' });
+  }
+});
+
+// GET data for a given indicator for a given month and year combo
+indicatorRouter.get('/period/:yearMonth', async (req: Request, res: Response) => {
   const indicatorName = parseIndicatorName(req.baseUrl);
+  const [periodYear, periodMonth] = req.params.yearMonth.split('-')
+  const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);
 
   try {
     const indicatorData = await axios.get(FRED_API_URL, {
       params: {
+        observation_end: `${periodYear}-${periodMonth}-${periodLastDay}`,
+        observation_start: `${periodYear}-${periodMonth}-01`,
         series_id: indicators[indicatorName].seriesId,
         file_type: FILE_TYPE,
         sort_order: SORT_ORDER,
         api_key: process.env.FRED_API_KEY
       }
     })
+
+    let dailyAverage = calcAvgIndicatorValue(indicatorData.data.observations);
+
     res.json({
-      [indicatorName]: indicatorData.data.observations
+      [indicatorName]: {
+        "date": `${periodYear}-${periodMonth}-01`,
+        "value": dailyAverage
+      }
     });
   } catch (e) {
     console.error(e);
@@ -135,38 +160,6 @@ indicatorRouter.get('/:period', async (req: Request, res: Response, next: NextFu
     return;
   }
 
-  const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);
-
-  try {
-    const indicatorData = await axios.get(FRED_API_URL, {
-      params: {
-        observation_end: `${periodYear}-${periodMonth}-${periodLastDay}`,
-        observation_start: `${periodYear}-${periodMonth}-01`,
-        series_id: indicators[indicatorName].seriesId,
-        file_type: FILE_TYPE,
-        sort_order: SORT_ORDER,
-        api_key: process.env.FRED_API_KEY
-      }
-    })
-
-    let dailyAverage = calcAvgIndicatorValue(indicatorData.data.observations);
-
-    res.json({
-      [indicatorName]: {
-        "date": `${periodYear}-${periodMonth}-01`,
-        "value": dailyAverage
-      }
-    });
-  } catch (e) {
-    console.error(e);
-    throw e;
-  }
-});
-
-// GET data for a given indicator for a given month and year combo
-indicatorRouter.get('/period/:yearMonth', async (req: Request, res: Response) => {
-  const indicatorName = parseIndicatorName(req.baseUrl);
-  const [periodYear, periodMonth] = req.params.yearMonth.split('-')
   const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);
 
   try {
