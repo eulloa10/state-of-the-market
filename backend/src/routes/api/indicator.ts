@@ -17,6 +17,9 @@ from '../../utils/getMostRecentIndicatorDate';
 import db from '../../db/models';
 import calcAvgIndicatorValue from '../../utils/calcAvgIndicatorValue';
 import parseIndicatorName from '../../utils/parseIndicatorName';
+import { FRED_API_URL } from '../../constants';
+import { FILE_TYPE } from '../../constants';
+import { SORT_ORDER } from '../../constants';
 
 dotenv.config();
 
@@ -31,15 +34,16 @@ type IndicatorData = {
   };
 };
 
+// GET all data for a given indicator
 indicatorRouter.get('/', async (req: Request, res: Response) => {
   const indicatorName = parseIndicatorName(req.baseUrl);
 
   try {
-    const indicatorData = await axios.get('https://api.stlouisfed.org/fred/series/observations', {
+    const indicatorData = await axios.get(FRED_API_URL, {
       params: {
         series_id: indicators[indicatorName].seriesId,
-        file_type: 'json',
-        sort_order: 'desc',
+        file_type: FILE_TYPE,
+        sort_order: SORT_ORDER,
         api_key: process.env.FRED_API_KEY
       }
     })
@@ -52,7 +56,8 @@ indicatorRouter.get('/', async (req: Request, res: Response) => {
   }
 });
 
-indicatorRouter.get('/all/:period', async (req: Request, res: Response, next: NextFunction) => {
+// GET all recent or prior data for all indicators
+indicatorRouter.get('/:period', async (req: Request, res: Response, next: NextFunction) => {
   const indicatorNames = Object.keys(indicatorReference);
   const indicatorData: IndicatorData = {};
 
@@ -71,13 +76,13 @@ indicatorRouter.get('/all/:period', async (req: Request, res: Response, next: Ne
     const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);
 
     try {
-      const indicatorDataResponse = await axios.get('https://api.stlouisfed.org/fred/series/observations', {
+      const indicatorDataResponse = await axios.get(FRED_API_URL, {
         params: {
           observation_end: `${periodYear}-${periodMonth}-${periodLastDay}`,
           observation_start: `${periodYear}-${periodMonth}-01`,
           series_id: indicators[indicatorName].seriesId,
-          file_type: 'json',
-          sort_order: 'desc',
+          file_type: FILE_TYPE,
+          sort_order: SORT_ORDER,
           api_key: process.env.FRED_API_KEY
         }
       });
@@ -91,7 +96,7 @@ indicatorRouter.get('/all/:period', async (req: Request, res: Response, next: Ne
       const indicatorRecordExists = await db.Indicator.findOne({
         where: {
           indicator_value: dailyAverage,
-          indicator_date: `${periodYear}-${periodMonth}-01`,
+          indicator_date: `${periodYear}-${periodMonth}-01`
          },
       });
 
@@ -115,6 +120,7 @@ indicatorRouter.get('/all/:period', async (req: Request, res: Response, next: Ne
   res.json(indicatorData);
 });
 
+// GET latest or prior data value for a given indicator
 indicatorRouter.get('/:period', async (req: Request, res: Response, next: NextFunction) => {
   const indicatorName = parseIndicatorName(req.baseUrl);
   let periodYear;
@@ -132,13 +138,13 @@ indicatorRouter.get('/:period', async (req: Request, res: Response, next: NextFu
   const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);
 
   try {
-    const indicatorData = await axios.get('https://api.stlouisfed.org/fred/series/observations', {
+    const indicatorData = await axios.get(FRED_API_URL, {
       params: {
         observation_end: `${periodYear}-${periodMonth}-${periodLastDay}`,
         observation_start: `${periodYear}-${periodMonth}-01`,
         series_id: indicators[indicatorName].seriesId,
-        file_type: 'json',
-        sort_order: 'desc',
+        file_type: FILE_TYPE,
+        sort_order: SORT_ORDER,
         api_key: process.env.FRED_API_KEY
       }
     })
@@ -157,19 +163,20 @@ indicatorRouter.get('/:period', async (req: Request, res: Response, next: NextFu
   }
 });
 
-indicatorRouter.get('/period/:period', async (req: Request, res: Response) => {
+// GET data for a given indicator for a given month and year combo
+indicatorRouter.get('/period/:yearMonth', async (req: Request, res: Response) => {
   const indicatorName = parseIndicatorName(req.baseUrl);
-  const [periodYear, periodMonth] = req.params.period.split('-')
+  const [periodYear, periodMonth] = req.params.yearMonth.split('-')
   const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);
 
   try {
-    const indicatorData = await axios.get('https://api.stlouisfed.org/fred/series/observations', {
+    const indicatorData = await axios.get(FRED_API_URL, {
       params: {
         observation_end: `${periodYear}-${periodMonth}-${periodLastDay}`,
         observation_start: `${periodYear}-${periodMonth}-01`,
         series_id: indicators[indicatorName].seriesId,
-        file_type: 'json',
-        sort_order: 'desc',
+        file_type: FILE_TYPE,
+        sort_order: SORT_ORDER,
         api_key: process.env.FRED_API_KEY
       }
     })

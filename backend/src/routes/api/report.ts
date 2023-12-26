@@ -15,24 +15,33 @@ dotenv.config();
 
 export const reportRouter = express.Router();
 
+// Generates monthly report and returns it
 reportRouter.get('/monthly', async (req: Request, res: Response) => {
   const now = new Date();
   const reportYear = now.getFullYear();
   const reportMonth = now.getMonth() + 1;
   const reportDay = '01'
+  const reportName = `${reportYear}-${reportMonth}-${reportDay} Monthly Report`
 
-  const indicatorData = await db.Report.findAll({
-    where: {
-      report_name: `${reportYear}-${reportMonth}-${reportDay} Monthly Report`
-    },
-    include: db.Indicator
-  })
+  try {
+    const indicatorData = await db.Report.findAll({
+      where: {
+        report_name: reportName
+      },
+      include: db.Indicator
+    });
 
-  const reportData = formatReportData(indicatorData);
-  const excelReport = await createExcelReport(reportData)
+    const reportData = formatReportData(indicatorData);
+    const excelReport = await createExcelReport(reportData);
 
-  // TODO: Convert data to xlsx and then save it to S3 AWS bucket
-  res.json(reportData);
+    // TODO: Convert data to xlsx and then save it to S3 AWS bucket
+    res.json(reportData);
+  } catch (error) {
+    console.error("Error generating monthly report:", error);
+    res.status(500).json({
+      error: "Internal Server Error"
+    });
+  }
 })
 
 // TODO: Add error handling in the event that the recent and prior data
