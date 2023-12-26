@@ -29,3 +29,10 @@ export interface CalculatedIndicatorData {
   date: string;
   value: string;
 }
+
+export interface IndicatorData {
+  [key: string]: {
+    date: string;
+    value: number | string;
+  };
+};

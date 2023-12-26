@@ -17,19 +17,13 @@ import validatePeriodParam from '../middleware/validatePeriodParam';
 import extractPeriodInfo from '../../utils/extractPeriodInfo';
 import fetchLatestIndicatorData from '../../utils/fetchLatestIndicatorData';
 import fetchPriorIndicatorData from '../../utils/fetchPriorIndicatorData';
+import { IndicatorData } from '../../types/interfaces';
 
 dotenv.config();
 
 export const indicatorRouter = express.Router();
 
 const indicators: Indicators = indicatorReference;
-
-type IndicatorData = {
-  [key: string]: {
-    date: string;
-    value: number | string;
-  };
-};
 
 // Latest data for all indicators
 indicatorRouter.get('/all/latest', async (req: Request, res: Response, next: NextFunction) => {
