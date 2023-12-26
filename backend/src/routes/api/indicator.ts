@@ -39,6 +39,40 @@ type IndicatorData = {
   };
 };
 
+// Latest data for all indicators
+indicatorRouter.get('/all/latest', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const indicatorNames = Object.keys(indicatorReference);
+    const indicatorData: IndicatorData = {};
+
+    for (const indicator of indicatorNames) {
+      const latestData: CalculatedIndicatorData = await fetchLatestIndicatorData(indicator);
+      indicatorData[indicator] = latestData;
+    }
+    res.json(indicatorData)
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'An error occurred while fetching the latest indicator data for all indicators' });
+  }
+});
+
+// Prior period data for all indicators
+indicatorRouter.get('/all/prior', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const indicatorNames = Object.keys(indicatorReference);
+    const indicatorData: IndicatorData = {};
+
+    for (const indicator of indicatorNames) {
+      const latestData: CalculatedIndicatorData = await fetchPriorIndicatorData(indicator);
+      indicatorData[indicator] = latestData;
+    }
+    res.json(indicatorData)
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'An error occurred while fetching prior period indicator data for all indicators' });
+  }
+});
+
 // All data for a given indicator
 indicatorRouter.get('/:indicator', validateIndicatorParam, async (req: Request, res: Response) => {
   try {
@@ -99,66 +133,83 @@ indicatorRouter.get('/:indicator/:period', validateIndicatorParam, validatePerio
   }
 });
 
-// GET all recent or prior data for all indicators
-indicatorRouter.get('/:period', async (req: Request, res: Response, next: NextFunction) => {
-  const indicatorNames = Object.keys(indicatorReference);
-  const indicatorData: IndicatorData = {};
+// Latest data point for all indicators
+indicatorRouter.get('/all/latest', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const indicatorNames = Object.keys(indicatorReference);
+    const indicatorData: IndicatorData = {};
 
-  for (const indicatorName of indicatorNames) {
-    let periodYear;
-    let periodMonth;
-
-    if (req.params.period === 'recent') {
-      [periodYear, periodMonth] = await getIndicatorDate(indicatorName, 'recent');
-    } else if (req.params.period === 'prior') {
-      [periodYear, periodMonth] = await getIndicatorDate(indicatorName, 'prior');
-    } else {
-      return res.status(400).json({ error: 'Invalid period' });
+    for (const indicator of indicatorNames) {
+      const latestData: CalculatedIndicatorData = await fetchLatestIndicatorData(indicator);
+      indicatorData[indicator] = latestData;
     }
-
-    const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);
-
-    try {
-      const indicatorDataResponse = await axios.get(FRED_API_URL, {
-        params: {
-          observation_end: `${periodYear}-${periodMonth}-${periodLastDay}`,
-          observation_start: `${periodYear}-${periodMonth}-01`,
-          series_id: indicators[indicatorName].seriesId,
-          file_type: FILE_TYPE,
-          sort_order: SORT_ORDER,
-          api_key: process.env.FRED_API_KEY
-        }
-      });
-
-      const dailyAverage = calcAvgIndicatorValue(indicatorDataResponse.data.observations);
-
-      const reference = await db.Indicator_Reference.findOne({
-        where: { series_id: indicators[indicatorName].seriesId },
-      });
-
-      const indicatorRecordExists = await db.Indicator.findOne({
-        where: {
-          indicator_value: dailyAverage,
-          indicator_date: `${periodYear}-${periodMonth}-01`
-         },
-      });
-
-      if (!indicatorRecordExists) {
-        await db.Indicator.create({
-          indicator_reference_id: reference.id,
-          indicator_value: dailyAverage,
-          indicator_date: `${periodYear}-${periodMonth}-01`,
-        });
-      }
-
-      indicatorData[indicatorName] = {
-        date: `${periodYear}-${periodMonth}-01`,
-        value: dailyAverage
-      };
-    } catch (e) {
-      console.error(e);
-      return res.status(500).json({ error: 'An error occurred while fetching indicator data' });
-    }
+    res.json(indicatorData)
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'An error occurred while fetching the latest indicator data for all indicators' });
   }
-  res.json(indicatorData);
 });
+
+// GET all recent or prior data for all indicators
+// indicatorRouter.get('/:period', async (req: Request, res: Response, next: NextFunction) => {
+//   const indicatorNames = Object.keys(indicatorReference);
+//   const indicatorData: IndicatorData = {};
+
+//   for (const indicatorName of indicatorNames) {
+//     let periodYear;
+//     let periodMonth;
+
+//     if (req.params.period === 'recent') {
+//       [periodYear, periodMonth] = await getIndicatorDate(indicatorName, 'recent');
+//     } else if (req.params.period === 'prior') {
+//       [periodYear, periodMonth] = await getIndicatorDate(indicatorName, 'prior');
+//     } else {
+//       return res.status(400).json({ error: 'Invalid period' });
+//     }
+
+//     const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);
+
+//     try {
+//       const indicatorDataResponse = await axios.get(FRED_API_URL, {
+//         params: {
+//           observation_end: `${periodYear}-${periodMonth}-${periodLastDay}`,
+//           observation_start: `${periodYear}-${periodMonth}-01`,
+//           series_id: indicators[indicatorName].seriesId,
+//           file_type: FILE_TYPE,
+//           sort_order: SORT_ORDER,
+//           api_key: process.env.FRED_API_KEY
+//         }
+//       });
+
+//       const dailyAverage = calcAvgIndicatorValue(indicatorDataResponse.data.observations);
+
+//       const reference = await db.Indicator_Reference.findOne({
+//         where: { series_id: indicators[indicatorName].seriesId },
+//       });
+
+//       const indicatorRecordExists = await db.Indicator.findOne({
+//         where: {
+//           indicator_value: dailyAverage,
+//           indicator_date: `${periodYear}-${periodMonth}-01`
+//          },
+//       });
+
+//       if (!indicatorRecordExists) {
+//         await db.Indicator.create({
+//           indicator_reference_id: reference.id,
+//           indicator_value: dailyAverage,
+//           indicator_date: `${periodYear}-${periodMonth}-01`,
+//         });
+//       }
+
+//       indicatorData[indicatorName] = {
+//         date: `${periodYear}-${periodMonth}-01`,
+//         value: dailyAverage
+//       };
+//     } catch (e) {
+//       console.error(e);
+//       return res.status(500).json({ error: 'An error occurred while fetching indicator data' });
+//     }
+//   }
+//   res.json(indicatorData);
+// });

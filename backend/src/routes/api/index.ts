@@ -7,6 +7,5 @@ import validateIndicator from '../middleware/validateIndicatorParam';
 export const apiRoutes = express.Router();
 apiRoutes.use(morgan('dev'));
 
-apiRoutes.use('/indicator', indicatorRouter);
-// apiRoutes.use('/indicators', indicatorRouter);
+apiRoutes.use('/indicators', indicatorRouter);
 apiRoutes.use('/reports', reportRouter);
