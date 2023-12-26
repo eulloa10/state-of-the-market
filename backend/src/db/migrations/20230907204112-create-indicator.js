@@ -21,6 +21,10 @@ module.exports = {
         type: Sequelize.DATEONLY,
         allowNull: false
       },
+      indicator_period: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -36,7 +40,7 @@ module.exports = {
     await queryInterface.addConstraint('Indicators', {
       type: 'unique',
       name: 'indicatorValueDateCompositeKey',
-      fields: ['indicator_value', 'createdAt'],
+      fields: ['indicator_reference_id', 'indicator_date', 'indicator_period'],
     });
   },
   async down(queryInterface, Sequelize) {

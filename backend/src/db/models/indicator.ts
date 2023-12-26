@@ -10,6 +10,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
     declare indicator_reference_id: number;
     declare indicator_value: number;
     declare indicator_date: string;
+    declare indicator_period: string;
 
     static associate(models: any) {
       Indicator.hasMany(models.Report, {
@@ -41,6 +42,10 @@ module.exports = (sequelize: any, DataTypes: any) => {
       type: DataTypes.DATEONLY,
       allowNull: false
     },
+    indicator_period: {
+      type: DataTypes.STRING,
+      allowNull:false
+    }
   }, {
     sequelize,
     modelName: 'Indicator',

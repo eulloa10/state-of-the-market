@@ -43,6 +43,7 @@ indicatorRouter.get('/all/latest', async (req: Request, res: Response, next: Nex
           indicator_reference_id: reference.id,
           indicator_value: latestData.value,
           indicator_date: latestData.date,
+          indicator_period: 'latest'
         });
         await transaction.commit();
       } catch (e) {
@@ -65,8 +66,25 @@ indicatorRouter.get('/all/prior', async (req: Request, res: Response, next: Next
     const indicatorData: IndicatorData = {};
 
     for (const indicator of indicatorNames) {
-      const latestData: CalculatedIndicatorData = await fetchPriorIndicatorData(indicator);
-      indicatorData[indicator] = latestData;
+      const priorPeriodData: CalculatedIndicatorData = await fetchPriorIndicatorData(indicator);
+      const transaction = await db.sequelize.transaction();
+
+      try {
+        const reference = await db.Indicator_Reference.findOne({
+          where: { series_id: indicators[indicator].seriesId },
+        });
+        await db.Indicator.create({
+          indicator_reference_id: reference.id,
+          indicator_value: priorPeriodData.value,
+          indicator_date: priorPeriodData.date,
+          indicator_period: 'prior'
+        });
+        await transaction.commit();
+      } catch (e) {
+        console.error('Transaction failed:', e);
+        await transaction.rollback();
+      }
+      indicatorData[indicator] = priorPeriodData;
     }
     res.json(indicatorData)
   } catch (e) {
