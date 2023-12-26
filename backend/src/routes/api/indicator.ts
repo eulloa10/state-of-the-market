@@ -21,6 +21,7 @@ import { FRED_API_URL, FILE_TYPE, SORT_ORDER } from '../../constants';
 import fetchIndicatorData from '../../utils/fetchIndicatorData';
 import validateIndicatorParam from '../middleware/validateIndicatorParam';
 import validatePeriodParam from '../middleware/validatePeriodParam';
+import extractPeriodInfo from '../../utils/extractPeriodInfo';
 
 dotenv.config();
 
@@ -53,12 +54,8 @@ indicatorRouter.get('/:indicator', validateIndicatorParam, async (req: Request, 
 // GET data for a given indicator for a given month and year combo
 indicatorRouter.get('/:indicator/:period', validateIndicatorParam, validatePeriodParam, async (req: Request, res: Response) => {
   try {
-    const { indicator, period } = req.params
-    const periodYear = period.slice(2);
-    const periodMonth = period.slice(0,2);
-    const periodLastDay = getLastDayOfMonth(periodMonth, periodYear);
-    const observation_start = `${periodYear}-${periodMonth}-01`
-    const observation_end = `${periodYear}-${periodMonth}-${periodLastDay}`
+    const { indicator, period } = req.params;
+    const { periodYear, periodMonth, observation_start, observation_end } = extractPeriodInfo(period);
 
     const indicatorData = await fetchIndicatorData(indicator, observation_start, observation_end);
 
@@ -72,7 +69,7 @@ indicatorRouter.get('/:indicator/:period', validateIndicatorParam, validatePerio
     });
   } catch (e) {
     console.error(e);
-    throw e;
+    res.status(500).json({ error: 'An error occurred while processing the request' });
   }
 });
 
