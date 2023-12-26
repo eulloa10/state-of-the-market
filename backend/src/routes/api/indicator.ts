@@ -3,22 +3,14 @@ import express, {
   Request,
   Response
 } from 'express';
-import axios from 'axios';
 import * as dotenv from 'dotenv';
 import indicatorReference from '../../data/indicatorReference.json';
 import {
   CalculatedIndicatorData,
   Indicators
 } from '../../types/interfaces';
-import getLastDayOfMonth
-from '../../utils/getLastDayOfMonth';
-import
-getIndicatorDate
-from '../../utils/getIndicatorDate';
 import db from '../../db/models';
 import calcAvgIndicatorValue from '../../utils/calcAvgIndicatorValue';
-import parseIndicatorName from '../../utils/parseIndicatorName';
-import { FRED_API_URL, FILE_TYPE, SORT_ORDER } from '../../constants';
 import fetchIndicatorData from '../../utils/fetchIndicatorData';
 import validateIndicatorParam from '../middleware/validateIndicatorParam';
 import validatePeriodParam from '../middleware/validatePeriodParam';
