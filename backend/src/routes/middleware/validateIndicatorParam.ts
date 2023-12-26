@@ -6,14 +6,13 @@ import express, {
 import indicatorReference from '../../data/indicatorReference.json';
 
 export default function validateIndicatorParam(req: Request, res: Response, next: NextFunction) {
-  const baseURL = req.baseUrl.split('/');
-  const indicatorName = baseURL[baseURL.length - 1]
-  if (indicatorName in indicatorReference) {
+  const { indicator } = req.params;
+  if (indicator in indicatorReference) {
     next();
   } else {
     res.status(404).json({
       error: 'Parameter not found',
-      message: `The provided parameter '${indicatorName}' is invalid or not found.`
+      message: `The provided parameter '${indicator}' is invalid or not found.`
     });
   }
 }
