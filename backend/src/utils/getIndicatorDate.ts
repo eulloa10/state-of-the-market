@@ -21,7 +21,7 @@ export default async function getIndicatorDate(indicatorName: string, period: st
     let year, month;
 
     [year, month] = indicatorData.data.observations[0].date.split('-');
-    if (period != 'recent') {
+    if (period != 'latest') {
       [year, month] = getPreviousMonthAndYear(year, month);
     }
     return [year, month]
