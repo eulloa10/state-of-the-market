@@ -13,6 +13,9 @@ const SibApiV3Sdk = require('sib-api-v3-typescript');
 
 dotenv.config();
 
+const REPORTBUCKET = process.env.AWS_REPORT_BUCKET_NAME;
+const REGION = process.env. AWS_REGION;
+
 const subscribers: Subscribers = emailSubscribers;
 
 export const emailServerRouter = express.Router();
@@ -32,14 +35,14 @@ emailServerRouter.post('/monthly', async (req: Request, res: Response, next: Nex
   const date = new Date();
 
   let monthName = date.toLocaleString('default', {
-    month: 'long'
+    month: 'short'
   });
   let year = date.getFullYear();
 
   let reportDate = `${monthName} ${year}`;
 
   sendSmtpEmail.subject = "State of the Market Report - {{params.reportDate}}";
-  sendSmtpEmail.htmlContent = "<html><body><p>Attached is the {{params.reportDate}} report</p></body></html>";
+
   sendSmtpEmail.sender = {
     "name": process.env.SMTP_SENDER_NAME,
     "email": process.env.SMTP_SENDER_EMAIL
@@ -56,11 +59,12 @@ emailServerRouter.post('/monthly', async (req: Request, res: Response, next: Nex
     "reportDate": reportDate
   };
 
-  const attachmentUrl = ""
+  const attachmentUrl = `https://${REPORTBUCKET}.s3.${REGION}.amazonaws.com/State+of+the+Market+Report+-+${monthName}+${year}.xlsx`
 
-  sendSmtpEmail.attachment = [{ "url": attachmentUrl, name: `State of the Market Report - ${reportDate}.xlsx` }];
+  sendSmtpEmail.attachment = [{ "url": attachmentUrl, name: `State of the Market Report - ${monthName} ${year}.xlsx` }];
 
   try {
+    // sendSmtpEmail.htmlContent = "<html><body><p>Hi</p><p>Attached is the {{params.reportDate}} report</p></body></html>";
     const customEmail = {
       ...sendSmtpEmail
     };
@@ -70,6 +74,10 @@ emailServerRouter.post('/monthly', async (req: Request, res: Response, next: Nex
         "email": recipient.email,
         "name": recipient.username
       }]
+
+      sendSmtpEmail.params.name = recipient.username;
+
+      customEmail.htmlContent = "<html><body><p>Hi {{params.name}},</p><p>Attached is the {{params.reportDate}} report.</p><p>State of the Market</p></body></html>";
 
       await apiInstance.sendTransacEmail(customEmail);
     }

@@ -34,6 +34,8 @@ reportRouter.get('/monthly', async (req: Request, res: Response) => {
     const reportData = formatReportData(indicatorData);
     const excelReport = await createExcelReport(reportData);
 
+    console.log("EXCEL REPORT", excelReport)
+
     // TODO: Convert data to xlsx and then save it to S3 AWS bucket
     res.json(reportData);
   } catch (error) {
