@@ -40,7 +40,7 @@ emailServerRouter.post('/monthly', async (req: Request, res: Response, next: Nex
   let reportDate = `${monthName} ${year}`;
 
   sendSmtpEmail.subject = "State of the Market Report - {{params.reportDate}}";
-  sendSmtpEmail.htmlContent = "<html><body><p>Hi Encarnacion, testing the email server. Please let me know if you received this and were able to successfully download the report.</p><p>Attached is the {{params.reportDate}} report</p></body></html>";
+  sendSmtpEmail.htmlContent = "<html><body><p>Attached is the {{params.reportDate}} report</p></body></html>";
   sendSmtpEmail.sender = {
     "name": process.env.SMTP_SENDER_NAME,
     "email": process.env.SMTP_SENDER_EMAIL
