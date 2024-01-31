@@ -81,7 +81,7 @@ emailServerRouter.post('/monthly', async (req: Request, res: Response, next: Nex
     console.error(e);
     res.status(500).json({
       success: false,
-      message: 'Failed to send emails'
+      message: 'Email distribution failed.'
     });
   }
 });

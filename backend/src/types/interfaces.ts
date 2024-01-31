@@ -37,7 +37,7 @@ export interface IndicatorData {
   };
 };
 
-export type Subscribers = {
+export interface Subscribers {
   [key:string]: {
     email: string;
     username: string;
