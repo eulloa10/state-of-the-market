@@ -8,7 +8,6 @@ import emailSubscribers from '../../data/emailSubscribers.json'
 import {
   Subscribers
 } from '../../types/interfaces';
-import axios from 'axios';
 
 const SibApiV3Sdk = require('sib-api-v3-typescript');
 
