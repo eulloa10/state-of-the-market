@@ -64,7 +64,6 @@ emailServerRouter.post('/monthly', async (req: Request, res: Response, next: Nex
   sendSmtpEmail.attachment = [{ "url": attachmentUrl, name: `State of the Market Report - ${monthName} ${year}.xlsx` }];
 
   try {
-    // sendSmtpEmail.htmlContent = "<html><body><p>Hi</p><p>Attached is the {{params.reportDate}} report</p></body></html>";
     const customEmail = {
       ...sendSmtpEmail
     };

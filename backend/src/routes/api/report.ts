@@ -16,7 +16,7 @@ dotenv.config();
 export const reportRouter = express.Router();
 
 // Generates monthly report and returns it
-reportRouter.get('/monthly', async (req: Request, res: Response) => {
+reportRouter.get('/aws/monthly', async (req: Request, res: Response) => {
   const now = new Date();
   const reportYear = now.getFullYear();
   const reportMonth = now.getMonth() + 1;
@@ -32,12 +32,11 @@ reportRouter.get('/monthly', async (req: Request, res: Response) => {
     });
 
     const reportData = formatReportData(indicatorData);
-    const excelReport = await createExcelReport(reportData);
+    await createExcelReport(reportData);
 
-    console.log("EXCEL REPORT", excelReport)
-
-    // TODO: Convert data to xlsx and then save it to S3 AWS bucket
-    res.json(reportData);
+    res.json({
+      "Report": reportData
+    });
   } catch (error) {
     console.error("Error generating monthly report:", error);
     res.status(500).json({
