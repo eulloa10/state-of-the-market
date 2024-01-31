@@ -11,7 +11,7 @@ const client = new S3Client({
 
 export const uploadToBucket = async (fileName, fileBody) => {
   const command = new PutObjectCommand({
-    Bucket: process.env.BUCKET_NAME,
+    Bucket: process.env.AWS_REPORT_BUCKET_NAME,
     Key: fileName,
     ContentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     Body: fileBody,

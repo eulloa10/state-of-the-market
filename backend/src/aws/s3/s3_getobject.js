@@ -11,7 +11,7 @@ const client = new S3Client({
 
 export const getObject = async (fileName) => {
   const command = new GetObjectCommand({
-    Bucket: process.env.BUCKET_NAME,
+    Bucket: process.env.AWS_REPORT_BUCKET_NAME,
     Key: fileName,
   });
 

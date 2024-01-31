@@ -3,6 +3,7 @@ import {
   // This command supersedes the ListObjectsCommand and is the recommended way to list objects.
   ListObjectsV2Command,
 } from "@aws-sdk/client-s3";
+import dotenv from 'dotenv';
 
 dotenv.config({path: '../../../.env'});
 
@@ -12,9 +13,9 @@ const client = new S3Client({
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
 });
 
-export const main = async () => {
+export const listObjects = async () => {
   const command = new ListObjectsV2Command({
-    Bucket: "my-bucket",
+    Bucket: process.env.AWS_REPORT_BUCKET_NAME,
     // The default and maximum number of keys returned is 1000. This limits it to
     // one for demonstration purposes.
     MaxKeys: 10,
