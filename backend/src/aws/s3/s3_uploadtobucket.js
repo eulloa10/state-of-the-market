@@ -19,7 +19,7 @@ export const uploadToBucket = async (fileName, fileBody) => {
 
   try {
     const response = await client.send(command);
-    console.log(response);
+    console.log("Upload to bucket", response);
   } catch (err) {
     console.error(err);
   }
