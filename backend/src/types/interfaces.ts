@@ -36,3 +36,11 @@ export interface IndicatorData {
     value: number | string;
   };
 };
+
+export type Subscribers = {
+  [key:string]: {
+    email: string;
+    username: string;
+    subscribed: boolean;
+  }
+}

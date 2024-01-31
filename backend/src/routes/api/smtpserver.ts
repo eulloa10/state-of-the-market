@@ -43,17 +43,8 @@ sendSmtpEmail.params = {
 
 console.log("SENDSMTPEMAIL", sendSmtpEmail)
 
-
-// sendSmtpEmail.subject = "My {{params.subject}}";
-// sendSmtpEmail.htmlContent = "<html><body><h1>This is my first transactional email {{params.parameter}}</h1></body></html>";
-// sendSmtpEmail.sender = {"name":"John Doe","email":"example@example.com"};
-// sendSmtpEmail.to = [{"email":"example@example.com","name":"Jane Doe"}];
-// sendSmtpEmail.replyTo = {"email":"replyto@domain.com","name":"John Doe"};
-// sendSmtpEmail.headers = {"Some-Custom-Name":"unique-id-1234"};
-// sendSmtpEmail.params = {"parameter":"My param value","subject":"New Subject"};
-
-// apiInstance.sendTransacEmail(sendSmtpEmail).then(function(data: any) {
-//   console.log('API called successfully. Returned data: ' + JSON.stringify(data));
-// }, function(error: any) {
-//   console.error(error);
-// });
+apiInstance.sendTransacEmail(sendSmtpEmail).then(function(data: any) {
+  console.log('API called successfully. Returned data: ' + JSON.stringify(data));
+}, function(error: any) {
+  console.error(error);
+});

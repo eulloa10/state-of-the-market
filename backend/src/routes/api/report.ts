@@ -46,6 +46,7 @@ reportRouter.get('/monthly', async (req: Request, res: Response) => {
 
 // TODO: Add error handling in the event that the recent and prior data
 // does not exist yet
+// Creates report for the current month
 reportRouter.post('/monthly', async (req: Request, res: Response) => {
   const todayStart = new Date().setHours(0, 0, 0, 0);
   const now = new Date();

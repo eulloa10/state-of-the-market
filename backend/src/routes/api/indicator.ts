@@ -25,7 +25,7 @@ export const indicatorRouter = express.Router();
 
 const indicators: Indicators = indicatorReference;
 
-// Latest data for all indicators
+// get latest data for all indicators
 indicatorRouter.get('/all/latest', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const indicatorNames = Object.keys(indicatorReference);
@@ -36,6 +36,7 @@ indicatorRouter.get('/all/latest', async (req: Request, res: Response, next: Nex
       const transaction = await db.sequelize.transaction();
 
       try {
+        console.log("INDICATORNAME", indicators[indicator].seriesId)
         const reference = await db.Indicator_Reference.findOne({
           where: { series_id: indicators[indicator].seriesId },
         });
@@ -59,7 +60,7 @@ indicatorRouter.get('/all/latest', async (req: Request, res: Response, next: Nex
   }
 });
 
-// Prior period data for all indicators
+// Get prior period data for all indicators
 indicatorRouter.get('/all/prior', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const indicatorNames = Object.keys(indicatorReference);
@@ -93,7 +94,7 @@ indicatorRouter.get('/all/prior', async (req: Request, res: Response, next: Next
   }
 });
 
-// All data for a given indicator
+// Get all data for a given indicator
 indicatorRouter.get('/:indicator', validateIndicatorParam, async (req: Request, res: Response) => {
   try {
     const { indicator } = req.params;
@@ -108,7 +109,7 @@ indicatorRouter.get('/:indicator', validateIndicatorParam, async (req: Request, 
   }
 });
 
-// Latest data point for an indicator
+// Get latest data point for an indicator
 indicatorRouter.get('/:indicator/latest', validateIndicatorParam, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { indicator } = req.params;
@@ -120,7 +121,7 @@ indicatorRouter.get('/:indicator/latest', validateIndicatorParam, async (req: Re
   }
 });
 
-// Prior period data point for an indicator
+// Get prior period data point for an indicator
 indicatorRouter.get('/:indicator/prior', validateIndicatorParam, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { indicator } = req.params;
@@ -132,7 +133,7 @@ indicatorRouter.get('/:indicator/prior', validateIndicatorParam, async (req: Req
   }
 });
 
-// Data for a given indicator for a given MMYYYY
+// Get data for a given indicator for a given MMYYYY
 indicatorRouter.get('/:indicator/:period', validateIndicatorParam, validatePeriodParam, async (req: Request, res: Response) => {
   try {
     const { indicator, period } = req.params;

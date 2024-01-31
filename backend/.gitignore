@@ -44,3 +44,6 @@ yarn.lock
 
 
 package-lock.json
+
+# ignore subscriber list
+src/data/emailSubscribers.json
