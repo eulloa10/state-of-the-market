@@ -16,7 +16,7 @@ dotenv.config();
 export const reportRouter = express.Router();
 
 // Generates monthly report and returns it
-reportRouter.get('/aws/monthly', async (req: Request, res: Response) => {
+reportRouter.post('/aws/monthly', async (req: Request, res: Response) => {
   const now = new Date();
   const reportYear = now.getFullYear();
   const reportMonth = now.getMonth() + 1;

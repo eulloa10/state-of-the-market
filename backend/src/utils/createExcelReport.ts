@@ -152,8 +152,6 @@ export default async function createExcelReport(reportData: ReportData) {
   let excelReportName =  `State of the Market Report - ${month} ${year}.xlsx`;
 
   const buffer = await workbook.xlsx.writeBuffer();
-  console.log(buffer);
-  await workbook.xlsx.writeFile(excelReportName)
 
   await uploadToBucket(excelReportName, buffer);
 
