@@ -57,7 +57,7 @@ emailServerRouter.post('/monthly', async (req: Request, res: Response, next: Nex
     "reportDate": reportDate
   };
 
-  const attachmentUrl = "https://sotm-reports.s3.us-west-1.amazonaws.com/State+of+the+Market+Report+-+Jan+2024.xlsx"
+  const attachmentUrl = ""
 
   sendSmtpEmail.attachment = [{ "url": attachmentUrl, name: `State of the Market Report - ${reportDate}.xlsx` }];
 
